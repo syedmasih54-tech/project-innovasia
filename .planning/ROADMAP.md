@@ -9,8 +9,8 @@
 | **03** | Stateful Feature Engine | Step 3 | `src/features.py` (O(1) memory, pass-through ratio, account age) | **Completed** |
 | **04** | Hybrid ML Model & Calibration | Step 4 | `src/train.py` (LightGBM + Isolation Forest + Isotonic Calibration) | **Completed** |
 | **05** | Cost-Utility Decision & Explanations | Step 5 | `src/decision.py` (Allow/Step-up/Hold + 3 plain-text reasons) | **Completed** |
-| **06** | 2,000 TPS Streaming Replay & Latency Benchmark | Step 6 | `src/replay.py` (`decisions.jsonl`, `metrics.json`, `latency.png`) | **Ready** |
-| **07** | Graph Mule Ring Detection | Step 7 | `src/rings.py` (`data/rings.json` + ring detection recall & time) | Pending |
+| **06** | 2,000 TPS Streaming Replay & Latency Benchmark | Step 6 | `src/replay.py` (`decisions.jsonl`, `metrics.json`, `latency.png`) | **Completed** |
+| **07** | Graph Mule Ring Detection | Step 7 | `src/rings.py` (`data/rings.json` + ring detection recall & time) | **Ready** |
 | **08** | Real-Time Operations Dashboard | Step 8 | `src/make_sample_outputs.py` & `app/dashboard.py` (Streamlit + Plotly) | Pending |
 | **09** | Round 2 Concept Drift Recalibration | Step 9 | `src/round2.py` (lightweight adaptation without full retraining) | Pending |
 | **10** | End-to-End Orchestrator & Documentation | Step 10 | `run_all.py`, `README.md`, `requirements.txt` | Pending |

@@ -1,0 +1,59 @@
+[
+  {
+    "ring_id": "ring_found_04",
+    "member_accounts": [
+      "acc_01188",
+      "acc_03069",
+      "acc_11704",
+      "acc_12716",
+      "acc_16791",
+      "acc_17075"
+    ],
+    "member_count": 6,
+    "total_rupees": 83957.74,
+    "time_first_flagged": 1204171,
+    "matched_true_ring": "ring_20"
+  },
+  {
+    "ring_id": "ring_found_03",
+    "member_accounts": [
+      "acc_00519",
+      "acc_01113",
+      "acc_01619",
+      "acc_11418",
+      "acc_13524",
+      "acc_13840"
+    ],
+    "member_count": 6,
+    "total_rupees": 83922.9,
+    "time_first_flagged": 1144068,
+    "matched_true_ring": "ring_19"
+  },
+  {
+    "ring_id": "ring_found_01",
+    "member_accounts": [
+      "acc_04092",
+      "acc_04714",
+      "acc_11170",
+      "acc_15906",
+      "acc_16943"
+    ],
+    "member_count": 5,
+    "total_rupees": 71216.38,
+    "time_first_flagged": 1027308,
+    "matched_true_ring": "ring_17"
+  },
+  {
+    "ring_id": "ring_found_02",
+    "member_accounts": [
+      "acc_03020",
+      "acc_05852",
+      "acc_09165",
+      "acc_09897"
+    ],
+    "member_count": 4,
+    "total_rupees": 49337.14,
+    "time_first_flagged": 1085806,
+    "matched_true_ring": "ring_18"
+  }
+]
