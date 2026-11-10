@@ -14,15 +14,15 @@ import pandas as pd
 RANDOM_SEED = 42
 
 # Accounts & Activity
-NUM_ACCOUNTS = 20000
+NUM_ACCOUNTS = 35000          # 35,000 unique UPI accounts
 NEW_ACCOUNT_RATIO = 0.15     # 15% of accounts are brand-new (appear late)
 TOTAL_DAYS = 14
 TOTAL_SECONDS = TOTAL_DAYS * 24 * 3600  # 1,209,600 seconds
-NUM_NORMAL_PAYMENTS = 400000 # Normal baseline payments
+NUM_NORMAL_PAYMENTS = 600000 # 600,000 normal baseline payments (1.2M+ total)
 
 # Fraud Settings
-NUM_RINGS = 20               # 20 mule rings per round
-NUM_SCAMS = 150              # 150 social engineering scam payments
+NUM_RINGS = 30               # 30 mule rings per round
+NUM_SCAMS = 220              # 220 social engineering scam payments (<0.1% fraud rate)
 
 CHANNELS = ["UPI_APP", "QR_CODE", "INTENT", "COLLECT_REQUEST", "P2P"]
 CHANNEL_WEIGHTS = [0.45, 0.30, 0.12, 0.08, 0.05]
@@ -79,9 +79,21 @@ def generate_normal_payments(accounts, creation_times, devices, favorites, num_p
     raw_times = np.clip(raw_times, 0, total_seconds - 1)
     raw_times.sort()
     
-    # Sample payment amounts: log-normal distribution (mostly 50 to 1,500 INR, occasionally larger)
-    amounts = np.random.lognormal(mean=5.5, sigma=1.0, size=num_payments)
-    amounts = np.clip(amounts, 10.0, 50000.0)
+    # Sample payment amounts: 3-tier realistic UPI mixture distribution
+    # Tier 1 (65%): Micro-payments (tea, grocery, auto) ₹20 - ₹1,500
+    # Tier 2 (25%): Mid-range transfers & shopping ₹2,000 - ₹18,000
+    # Tier 3 (10%): High-value legitimate transfers (rent, fees, electronics) ₹20,000 - ₹1,20,000 (Lakhs!)
+    tier_choices = np.random.choice([1, 2, 3], size=num_payments, p=[0.65, 0.25, 0.10])
+    
+    t1_amounts = np.random.lognormal(mean=5.2, sigma=0.8, size=num_payments)
+    t1_amounts = np.clip(t1_amounts, 20.0, 1500.0)
+    
+    t2_amounts = np.random.lognormal(mean=8.5, sigma=0.6, size=num_payments)
+    t2_amounts = np.clip(t2_amounts, 2000.0, 18000.0)
+    
+    t3_amounts = np.random.uniform(20000.0, 120000.0, size=num_payments)
+    
+    amounts = np.where(tier_choices == 1, t1_amounts, np.where(tier_choices == 2, t2_amounts, t3_amounts))
     amounts = np.round(amounts, 2)
     
     channels = np.random.choice(CHANNELS, size=num_payments, p=CHANNEL_WEIGHTS)
@@ -153,7 +165,7 @@ def generate_round1_fraud(accounts, devices, total_seconds, txn_offset):
         for feeder in feeders:
             feeder_time = t_base + random.randint(10, 580)
             feeder_times.append(feeder_time)
-            amount = round(random.uniform(5000, 25000), 2)
+            amount = round(random.uniform(15000, 45000), 2)
             total_inflow += amount
             
             fraud_rows.append({
@@ -192,12 +204,12 @@ def generate_round1_fraud(accounts, devices, total_seconds, txn_offset):
             })
             current_txn_id += 1
 
-    # 2. Scam Payments (150 uncharacteristically large first-time transfers)
+    # 2. Scam Payments (Large first-time transfers in thousands and lakhs)
     scam_times = np.linspace(3600, total_seconds - 3600, NUM_SCAMS)
     for s_idx in range(NUM_SCAMS):
         t_scam = int(scam_times[s_idx]) + random.randint(-600, 600)
         victim, scammer = random.sample(accounts, 2)
-        scam_amount = round(random.uniform(25000, 95000), 2)
+        scam_amount = round(random.uniform(45000, 185000), 2)
         
         fraud_rows.append({
             "txn_id": f"txn_{current_txn_id:07d}",
@@ -237,7 +249,7 @@ def generate_round2_fraud(accounts, devices, total_seconds, txn_offset):
         if use_chain:
             # 4-hop chain
             chain_nodes = random.sample(accounts, 4)
-            chain_amount = round(random.uniform(40000, 80000), 2)
+            chain_amount = round(random.uniform(75000, 220000), 2)
             hop_time = t_base
             
             for hop in range(3):
@@ -273,7 +285,7 @@ def generate_round2_fraud(accounts, devices, total_seconds, txn_offset):
             for feeder in feeders:
                 feeder_time = t_base + random.randint(60, 1800)
                 feeder_times.append(feeder_time)
-                amount = round(random.uniform(4000, 20000), 2)
+                amount = round(random.uniform(12000, 38000), 2)
                 total_inflow += amount
                 new_dev = f"dev_drift_{feeder}_{r_idx}"
                 
@@ -316,12 +328,12 @@ def generate_round2_fraud(accounts, devices, total_seconds, txn_offset):
                 })
                 current_txn_id += 1
                 
-    # 150 Scam Payments for Round 2
+    # Scam Payments for Round 2 in thousands and lakhs
     scam_times = np.linspace(3600, total_seconds - 3600, NUM_SCAMS)
     for s_idx in range(NUM_SCAMS):
         t_scam = int(scam_times[s_idx]) + random.randint(-600, 600)
         victim, scammer = random.sample(accounts, 2)
-        scam_amount = round(random.uniform(30000, 110000), 2)
+        scam_amount = round(random.uniform(40000, 160000), 2)
         fraud_rows.append({
             "txn_id": f"txn_{current_txn_id:07d}",
             "time": t_scam,

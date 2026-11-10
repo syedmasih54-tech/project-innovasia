@@ -227,3 +227,4 @@ flowchart TD
 | **8** | [`app/dashboard.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/app/dashboard.py) | `decisions.jsonl`, `rings.json`, `metrics.json` | Streamlit interactive UI | 6-panel live operations dashboard for evaluators |
 | **9** | [`src/round2.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/round2.py) | `features_round2.csv`, models | 3-row evaluation table | Demonstrates sub-second online recalibration on 5% sample (no full retrain) |
 | **10** | [`run_all.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/run_all.py) | All component modules | Full project verification | One-click master orchestrator running all 6 stages sequentially |
+

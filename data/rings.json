@@ -1,59 +1,170 @@
 [
   {
-    "ring_id": "ring_found_04",
-    "member_accounts": [
-      "acc_01188",
-      "acc_03069",
-      "acc_11704",
-      "acc_12716",
-      "acc_16791",
-      "acc_17075"
-    ],
-    "member_count": 6,
-    "total_rupees": 83957.74,
-    "time_first_flagged": 1204171,
-    "matched_true_ring": "ring_20"
-  },
-  {
     "ring_id": "ring_found_03",
     "member_accounts": [
-      "acc_00519",
-      "acc_01113",
-      "acc_01619",
-      "acc_11418",
-      "acc_13524",
-      "acc_13840"
+      "acc_06238",
+      "acc_09978",
+      "acc_17224",
+      "acc_18224",
+      "acc_18584",
+      "acc_18788",
+      "acc_19941",
+      "acc_22340",
+      "acc_22458",
+      "acc_28162",
+      "acc_28812",
+      "acc_30820",
+      "acc_32395",
+      "acc_33706"
     ],
-    "member_count": 6,
-    "total_rupees": 83922.9,
-    "time_first_flagged": 1144068,
-    "matched_true_ring": "ring_19"
+    "member_count": 14,
+    "total_rupees": 673151.75,
+    "time_first_flagged": 1049750,
+    "matched_true_ring": "ring_26"
+  },
+  {
+    "ring_id": "ring_found_04",
+    "member_accounts": [
+      "acc_03741",
+      "acc_04338",
+      "acc_08152",
+      "acc_17643",
+      "acc_18550",
+      "acc_20981",
+      "acc_22304",
+      "acc_22330",
+      "acc_23340",
+      "acc_25304",
+      "acc_27066",
+      "acc_27637",
+      "acc_29691"
+    ],
+    "member_count": 13,
+    "total_rupees": 580400.22,
+    "time_first_flagged": 1085154,
+    "matched_true_ring": "ring_29"
+  },
+  {
+    "ring_id": "ring_found_05",
+    "member_accounts": [
+      "acc_08829",
+      "acc_10198",
+      "acc_10292",
+      "acc_12055",
+      "acc_26817",
+      "acc_27081",
+      "acc_27936",
+      "acc_34814",
+      "acc_34918"
+    ],
+    "member_count": 9,
+    "total_rupees": 408237.47,
+    "time_first_flagged": 1087306,
+    "matched_true_ring": "ring_27"
   },
   {
     "ring_id": "ring_found_01",
     "member_accounts": [
-      "acc_04092",
-      "acc_04714",
-      "acc_11170",
-      "acc_15906",
-      "acc_16943"
+      "acc_06516",
+      "acc_07901",
+      "acc_14136",
+      "acc_24871"
     ],
-    "member_count": 5,
-    "total_rupees": 71216.38,
-    "time_first_flagged": 1027308,
-    "matched_true_ring": "ring_17"
+    "member_count": 4,
+    "total_rupees": 351281.5,
+    "time_first_flagged": 1020115,
+    "matched_true_ring": ""
+  },
+  {
+    "ring_id": "ring_found_11",
+    "member_accounts": [
+      "acc_02079",
+      "acc_07731",
+      "acc_10398",
+      "acc_13379",
+      "acc_13528",
+      "acc_31052",
+      "acc_34731"
+    ],
+    "member_count": 7,
+    "total_rupees": 279206.74,
+    "time_first_flagged": 1202776,
+    "matched_true_ring": "ring_30"
+  },
+  {
+    "ring_id": "ring_found_06",
+    "member_accounts": [
+      "acc_04279",
+      "acc_06094",
+      "acc_08104",
+      "acc_16972"
+    ],
+    "member_count": 4,
+    "total_rupees": 266389.88,
+    "time_first_flagged": 1091921,
+    "matched_true_ring": ""
+  },
+  {
+    "ring_id": "ring_found_10",
+    "member_accounts": [
+      "acc_07876",
+      "acc_20297",
+      "acc_24610"
+    ],
+    "member_count": 3,
+    "total_rupees": 241681.54,
+    "time_first_flagged": 1173252,
+    "matched_true_ring": ""
   },
   {
     "ring_id": "ring_found_02",
     "member_accounts": [
-      "acc_03020",
-      "acc_05852",
-      "acc_09165",
-      "acc_09897"
+      "acc_02372",
+      "acc_10348",
+      "acc_25773"
     ],
-    "member_count": 4,
-    "total_rupees": 49337.14,
-    "time_first_flagged": 1085806,
-    "matched_true_ring": "ring_18"
+    "member_count": 3,
+    "total_rupees": 240773.63,
+    "time_first_flagged": 1041397,
+    "matched_true_ring": ""
+  },
+  {
+    "ring_id": "ring_found_08",
+    "member_accounts": [
+      "acc_13559",
+      "acc_22356",
+      "acc_22883"
+    ],
+    "member_count": 3,
+    "total_rupees": 236362.79,
+    "time_first_flagged": 1113156,
+    "matched_true_ring": ""
+  },
+  {
+    "ring_id": "ring_found_07",
+    "member_accounts": [
+      "acc_13553",
+      "acc_22676",
+      "acc_28676"
+    ],
+    "member_count": 3,
+    "total_rupees": 235826.49,
+    "time_first_flagged": 1092242,
+    "matched_true_ring": ""
+  },
+  {
+    "ring_id": "ring_found_09",
+    "member_accounts": [
+      "acc_01569",
+      "acc_02695",
+      "acc_03115",
+      "acc_06299",
+      "acc_15976",
+      "acc_34834"
+    ],
+    "member_count": 6,
+    "total_rupees": 154341.42,
+    "time_first_flagged": 1126201,
+    "matched_true_ring": "ring_28"
   }
 ]

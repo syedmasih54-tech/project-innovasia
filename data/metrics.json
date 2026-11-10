@@ -1,13 +1,13 @@
 {
-  "p50": 92.83,
-  "p95": 2014.65,
-  "p99": 2143.12,
-  "max": 2225.42,
+  "p50": 56.35,
+  "p95": 174.28,
+  "p99": 481.64,
+  "max": 622.38,
   "achieved_tps": 1999.0,
   "pr_auc_rules": 0.5429,
   "pr_auc_model": 0.8966,
   "recall_at_1pct_rules": 80.0,
   "recall_at_1pct_model": 98.33,
-  "rupees_prevented": 144217.08,
-  "rupees_friction": 32383.61
+  "rupees_prevented": 2226133.58,
+  "rupees_friction": 37057706.85
 }
