@@ -1,0 +1,13 @@
+{
+  "p50": 0.01,
+  "p95": 0.01,
+  "p99": 24.41,
+  "max": 62.9,
+  "achieved_tps": 3760.0,
+  "pr_auc_rules": 0.5429,
+  "pr_auc_model": 0.8966,
+  "recall_at_1pct_rules": 80.0,
+  "recall_at_1pct_model": 98.33,
+  "rupees_prevented": 35608.19,
+  "rupees_friction": 0.0
+}
