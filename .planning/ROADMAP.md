@@ -7,8 +7,8 @@
 | **01** | Synthetic Data Generation | Step 1 | `src/generator.py` generating `data/round1.csv` & `data/round2.csv` | **Completed** |
 | **02** | Heuristic Rules Baseline | Step 2 | `src/baseline.py` with temporal train/test split & PR-AUC evaluation | **Completed** |
 | **03** | Stateful Feature Engine | Step 3 | `src/features.py` (O(1) memory, pass-through ratio, account age) | **Completed** |
-| **04** | Hybrid ML Model & Calibration | Step 4 | `src/train.py` (LightGBM + Isolation Forest + Isotonic Calibration) | **Ready** |
-| **05** | Cost-Utility Decision & Explanations | Step 5 | `src/decision.py` (Allow/Step-up/Hold + 3 plain-text reasons) | Pending |
+| **04** | Hybrid ML Model & Calibration | Step 4 | `src/train.py` (LightGBM + Isolation Forest + Isotonic Calibration) | **Completed** |
+| **05** | Cost-Utility Decision & Explanations | Step 5 | `src/decision.py` (Allow/Step-up/Hold + 3 plain-text reasons) | **Ready** |
 | **06** | 2,000 TPS Streaming Replay & Latency Benchmark | Step 6 | `src/replay.py` (`decisions.jsonl`, `metrics.json`, `latency.png`) | Pending |
 | **07** | Graph Mule Ring Detection | Step 7 | `src/rings.py` (`data/rings.json` + ring detection recall & time) | Pending |
 | **08** | Real-Time Operations Dashboard | Step 8 | `src/make_sample_outputs.py` & `app/dashboard.py` (Streamlit + Plotly) | Pending |
