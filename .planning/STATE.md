@@ -8,14 +8,13 @@
   - Phase 05: Cost-Utility Decision & Explanations (`src/decision.py`, Rs 12.3 Lakhs saved, 9.2x ROI)
   - Phase 06: 2,000 TPS Replay Benchmark (`src/replay.py`, p99: 0.01 ms, Speed: 3,539 TPS)
   - Phase 07: Graph Mule Ring Detection (`src/rings.py`, 4 of 4 rings found = 100%, avg delay 66s)
-- **Current Phase**: Phase 08 — Real-Time Operations Dashboard
-- **Phase Status**: Ready for implementation (`src/make_sample_outputs.py` & `app/dashboard.py`)
-- **Target Files**:
-  - `src/make_sample_outputs.py`
-  - `app/dashboard.py`
+  - Phase 08: Real-Time Operations Dashboard (`app/dashboard.py`, 6 live panels)
+- **Current Phase**: Phase 09 — Round 2 Concept Drift Recalibration
+- **Phase Status**: Ready for implementation (`src/round2.py`)
+- **Target File**: `src/round2.py`
 - **Output Artifacts Expected**:
-  - Live 6-panel Streamlit Dashboard (`app/dashboard.py`)
-  - Real-time interactive UI with NetworkX ring graph and cost sliders
+  - Comparison table: Round 1 vs Round 2 Before vs Round 2 After recalibration
+  - Lightweight adaptation without full model retraining
 - **Environment**:
   - Python 3.11.17 (`venv`)
   - Virtual Environment: `venv` active
