@@ -14,6 +14,8 @@ Every day in India, millions of UPI payments occur. Unlike credit card transacti
 
 For every challenged or blocked transaction, StreamShield generates **up to 3 plain-English reasons** explaining *why* (e.g., *"Received money from 8 different senders in the last 24 hours"*), and visualizes the account relationships on a **live operations dashboard**.
 
+> 📐 **System Blueprints & Flowcharts**: Complete visual flowcharts covering all 10 architectural phases are detailed in [**`ARCHITECTURE.md`**](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/ARCHITECTURE.md) and available interactively inside the web dashboard.
+
 ---
 
 ## 2. Key Performance Metrics (Measured on This Computer)

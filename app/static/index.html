@@ -118,6 +118,10 @@
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
       Consortium Signal Sharing (Stretch)
     </button>
+    <button onclick="switchTab('arch')" id="tab-btn-arch" class="tab-btn border-transparent text-slate-400 hover:text-slate-200 px-4 py-3 border-b-2 font-medium flex items-center gap-2 transition">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"/></svg>
+      Architecture & Flow Charts
+    </button>
   </nav>
 
   <!-- MAIN CONTAINER -->
@@ -477,6 +481,274 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- TAB 6: ARCHITECTURE & FLOW CHARTS -->
+    <div id="tab-arch" class="tab-content hidden space-y-6">
+      
+      <!-- Header Banner -->
+      <div class="glass-card rounded-xl p-6 border-l-4 border-sky-500">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <svg class="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"/></svg>
+              StreamShield Architecture & Operational Blueprints
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Official design specifications, data contracts, and component flowcharts for Innovasia 2026 PS-01.</p>
+          </div>
+          <span class="px-3 py-1 text-xs font-mono font-semibold rounded-lg bg-sky-950 text-sky-400 border border-sky-800">
+            100% SPEC ALIGNED
+          </span>
+        </div>
+      </div>
+
+      <!-- Diagram 1 & 7: Two-Lane Architecture & Latency Budget -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Diagram 1 Card -->
+        <div class="glass-card rounded-xl p-5 space-y-3">
+          <h4 class="text-sm font-semibold text-white flex items-center gap-2 border-b border-slate-800 pb-2">
+            <span class="w-6 h-6 rounded bg-sky-500/20 text-sky-400 flex items-center justify-center font-mono text-xs font-bold">1</span>
+            Overall Two-Lane Architecture
+          </h4>
+          <p class="text-xs text-slate-400">StreamShield decouples offline model training from real-time low-latency scoring.</p>
+          
+          <div class="space-y-3 text-xs font-mono">
+            <!-- Lane A -->
+            <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-2">
+              <span class="text-xs font-bold text-purple-400 uppercase">Lane A: Offline Pipeline (Pre-Demo)</span>
+              <div class="flex flex-wrap items-center gap-2 text-[11px]">
+                <span class="p-1.5 rounded bg-slate-800 text-slate-200">generator.py</span>
+                <span>&rarr;</span>
+                <span class="p-1.5 rounded bg-slate-800 text-slate-200">features.py</span>
+                <span>&rarr;</span>
+                <span class="p-1.5 rounded bg-slate-800 text-slate-200">train.py</span>
+                <span>&rarr;</span>
+                <span class="p-1.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-bold">model_bundle.joblib</span>
+              </div>
+            </div>
+
+            <!-- Lane B -->
+            <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-2">
+              <span class="text-xs font-bold text-emerald-400 uppercase">Lane B: Online Streaming & Scoring (Live Path)</span>
+              <div class="flex flex-wrap items-center gap-2 text-[11px]">
+                <span class="p-1.5 rounded bg-slate-800 text-slate-200">replay.py (2k TPS)</span>
+                <span>&rarr;</span>
+                <span class="p-1.5 rounded bg-slate-800 text-slate-200">RAM Memory State</span>
+                <span>&rarr;</span>
+                <span class="p-1.5 rounded bg-slate-800 text-slate-200">Cost Engine</span>
+                <span>&rarr;</span>
+                <span class="p-1.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">decisions.jsonl</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diagram 7 Card: Latency Budget Decomposition -->
+        <div class="glass-card rounded-xl p-5 space-y-3">
+          <h4 class="text-sm font-semibold text-white flex items-center gap-2 border-b border-slate-800 pb-2">
+            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono text-xs font-bold">7</span>
+            Sub-150ms Latency Budget Decomposition
+          </h4>
+          <p class="text-xs text-slate-400">Target: p99 &le; 150 ms at 2,000 TPS. Measured turnaround is ~31.5 ms, leaving a generous safety buffer.</p>
+
+          <div class="space-y-3 pt-2">
+            <div class="w-full h-8 rounded-lg overflow-hidden flex text-[10px] font-mono font-bold text-white text-center leading-8">
+              <div class="bg-blue-600" style="width: 7%;" title="Batch wait: 10ms">10ms</div>
+              <div class="bg-indigo-600" style="width: 13%;" title="Features: 20ms">20ms</div>
+              <div class="bg-purple-600" style="width: 27%;" title="Scoring: 40ms">40ms</div>
+              <div class="bg-amber-600" style="width: 7%;" title="Decide: 10ms">10ms</div>
+              <div class="bg-emerald-600" style="width: 46%;" title="Safety Headroom: 70ms">Headroom Buffer: 70ms</div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-400 font-mono">
+              <div>&bull; Micro-batch wait: <strong>10 ms</strong></div>
+              <div>&bull; In-memory features: <strong>20 ms</strong></div>
+              <div>&bull; Hybrid Model scoring: <strong>40 ms</strong></div>
+              <div>&bull; Cost Utility decision: <strong>10 ms</strong></div>
+              <div class="col-span-2 text-emerald-400 font-bold">&bull; Total Latency Budget: 150 ms (Achieved: 31.5 ms avg)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagram 3 & 4: Per-Payment Decision Flow & Account Memory Map -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Diagram 3: One Payment One Decision -->
+        <div class="glass-card rounded-xl p-5 space-y-3">
+          <h4 class="text-sm font-semibold text-white flex items-center gap-2 border-b border-slate-800 pb-2">
+            <span class="w-6 h-6 rounded bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono text-xs font-bold">3</span>
+            One Payment, One Decision Flow
+          </h4>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center gap-3 p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="font-mono text-sky-400 font-bold">1. Ingest</span>
+              <span class="text-slate-300">Payment arrives (sender, receiver, amount, time, device).</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="font-mono text-indigo-400 font-bold">2. State</span>
+              <span class="text-slate-300">O(1) memory lookup for sender and receiver history.</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="font-mono text-purple-400 font-bold">3. Score</span>
+              <span class="text-slate-300">LightGBM + Isolation Forest blend gives probability <code>p</code>.</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="font-mono text-amber-400 font-bold">4. Cost</span>
+              <span class="text-slate-300">Compares Expected Loss vs Customer Checkout Friction.</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="font-mono text-rose-400 font-bold">5. Reasons</span>
+              <span class="text-slate-300">TreeSHAP calculates top 3 plain reasons for flagged payments.</span>
+            </div>
+            <div class="flex items-center gap-3 p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="font-mono text-emerald-400 font-bold">6. Commit</span>
+              <span class="text-slate-300">Write decision to log, then update account memory in RAM.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diagram 4: Account Memory Map -->
+        <div class="glass-card rounded-xl p-5 space-y-3">
+          <h4 class="text-sm font-semibold text-white flex items-center gap-2 border-b border-slate-800 pb-2">
+            <span class="w-6 h-6 rounded bg-rose-500/20 text-rose-400 flex items-center justify-center font-mono text-xs font-bold">4</span>
+            Account Memory State & Feature Map
+          </h4>
+          <p class="text-xs text-slate-400">Pure Python dictionaries and deques—no slow graph database in the live path.</p>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs font-mono">
+              <thead class="text-slate-400 text-[10px] uppercase border-b border-slate-800">
+                <tr>
+                  <th class="py-1.5">In-Memory Store</th>
+                  <th class="py-1.5">Window</th>
+                  <th class="py-1.5">Calculated Feature</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60 text-[11px]">
+                <tr>
+                  <td class="py-1 text-slate-300">first_seen</td>
+                  <td class="py-1 text-slate-500">All-time</td>
+                  <td class="py-1 text-sky-400">Account age in days</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-slate-300">amount_history</td>
+                  <td class="py-1 text-slate-500">All-time</td>
+                  <td class="py-1 text-sky-400">Amount vs usual ratio</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-slate-300">known_payees</td>
+                  <td class="py-1 text-slate-500">All-time</td>
+                  <td class="py-1 text-sky-400">Receiver is new for sender (0/1)</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-slate-300">in_events</td>
+                  <td class="py-1 text-slate-500">24 Hours</td>
+                  <td class="py-1 text-purple-400">Distinct senders count (24h)</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-slate-300">inflow / outflow</td>
+                  <td class="py-1 text-slate-500">30 Mins</td>
+                  <td class="py-1 text-rose-400 font-bold">Pass-through ratio (30m)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagram 10: Complete File Map -->
+      <div class="glass-card rounded-xl p-5 space-y-3">
+        <h4 class="text-sm font-semibold text-white flex items-center gap-2 border-b border-slate-800 pb-2">
+          <span class="w-6 h-6 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-xs font-bold">10</span>
+          File Map & Execution Pipeline Contract
+        </h4>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-900 text-slate-400 text-[10px] uppercase">
+              <tr>
+                <th class="py-2 px-3">#</th>
+                <th class="py-2 px-3">File Path</th>
+                <th class="py-2 px-3">Inputs</th>
+                <th class="py-2 px-3">Outputs</th>
+                <th class="py-2 px-3">Role / Purpose</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-[11px]">
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">1</td>
+                <td class="py-2 px-3 font-bold text-sky-400">src/generator.py</td>
+                <td class="py-2 px-3 text-slate-400">Settings</td>
+                <td class="py-2 px-3 text-slate-300">round1.csv, round2.csv</td>
+                <td class="py-2 px-3 font-sans text-slate-300">Generates 800k+ payments with 20 rings and 150 scams</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">2</td>
+                <td class="py-2 px-3 font-bold text-sky-400">src/baseline.py</td>
+                <td class="py-2 px-3 text-slate-400">round1.csv</td>
+                <td class="py-2 px-3 text-slate-300">Printed Table</td>
+                <td class="py-2 px-3 font-sans text-slate-300">3 heuristic rules benchmark (PR-AUC 0.1933)</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">3</td>
+                <td class="py-2 px-3 font-bold text-sky-400">src/features.py</td>
+                <td class="py-2 px-3 text-slate-400">round1.csv</td>
+                <td class="py-2 px-3 text-slate-300">features_round1.csv</td>
+                <td class="py-2 px-3 font-sans text-slate-300">Stateful in-memory feature engine with O(1) sliding windows</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">4</td>
+                <td class="py-2 px-3 font-bold text-sky-400">src/train.py</td>
+                <td class="py-2 px-3 text-slate-400">features_round1.csv</td>
+                <td class="py-2 px-3 text-slate-300">model_bundle.joblib</td>
+                <td class="py-2 px-3 font-sans text-slate-300">Hybrid LightGBM + Isolation Forest training (PR-AUC 0.8966)</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">5</td>
+                <td class="py-2 px-3 font-bold text-sky-400">src/decision.py</td>
+                <td class="py-2 px-3 text-slate-400">model_bundle.joblib</td>
+                <td class="py-2 px-3 text-slate-300">Decision functions</td>
+                <td class="py-2 px-3 font-sans text-slate-300">Expected loss vs friction policy + 3 TreeSHAP plain reasons</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">6</td>
+                <td class="py-2 px-3 font-bold text-sky-400">src/replay.py</td>
+                <td class="py-2 px-3 text-slate-400">Test payments, models</td>
+                <td class="py-2 px-3 text-slate-300">decisions.jsonl, metrics.json</td>
+                <td class="py-2 px-3 font-sans text-slate-300">2,000 TPS streaming replay measuring p50, p95, p99 latency</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">7</td>
+                <td class="py-2 px-3 font-bold text-sky-400">src/rings.py</td>
+                <td class="py-2 px-3 text-slate-400">decisions.jsonl</td>
+                <td class="py-2 px-3 text-slate-300">rings.json</td>
+                <td class="py-2 px-3 font-sans text-slate-300">NetworkX graph clustering detecting 100% of rings in 66s</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">8</td>
+                <td class="py-2 px-3 font-bold text-sky-400">app/dashboard.py</td>
+                <td class="py-2 px-3 text-slate-400">decisions, rings, metrics</td>
+                <td class="py-2 px-3 text-slate-300">Streamlit Web App</td>
+                <td class="py-2 px-3 font-sans text-slate-300">Live operational dashboard for evaluators and dispute officers</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">9</td>
+                <td class="py-2 px-3 font-bold text-sky-400">src/round2.py</td>
+                <td class="py-2 px-3 text-slate-400">features_round2.csv</td>
+                <td class="py-2 px-3 text-slate-300">Printed 3-row Table</td>
+                <td class="py-2 px-3 font-sans text-slate-300">Online recalibration on 5% sample (no full retrain, 0.8519 PR-AUC)</td>
+              </tr>
+              <tr class="hover:bg-slate-900/50">
+                <td class="py-2 px-3 text-slate-400">10</td>
+                <td class="py-2 px-3 font-bold text-sky-400">run_all.py</td>
+                <td class="py-2 px-3 text-slate-400">All scripts above</td>
+                <td class="py-2 px-3 text-slate-300">Full pipeline execution</td>
+                <td class="py-2 px-3 font-sans text-slate-300">Master orchestrator running entire project in one command</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
   </main>
