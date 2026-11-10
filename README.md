@@ -65,12 +65,19 @@ Run the entire pipeline end-to-end (generates data, extracts features, trains mo
 python run_all.py
 ```
 
-### Option B: Launch the Live Dashboard
+### Option B: Launch the Streamlit Dashboard
 Open the interactive 6-panel visual control room:
 ```bash
 streamlit run app/dashboard.py
 ```
 This opens your browser at `http://localhost:8501`.
+
+### Option C: Launch the Cyber-Fintech Web Command Center (Modern SPA)
+Open the standalone cyber-fintech single-page application:
+```bash
+python app/server.py 8080
+```
+This opens your browser at `http://localhost:8080`.
 
 ---
 
