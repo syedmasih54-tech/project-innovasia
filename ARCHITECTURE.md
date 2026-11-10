@@ -124,7 +124,7 @@ flowchart LR
     CHK -->|YES| RING["Create Mule Ring Dossier<br/>• ring_id<br/>• member accounts<br/>• total rupees funnelled<br/>• time first flagged"]
     CHK -->|NO| IGN["Ignore Small Benign Pair"]
     RING --> OUT["Save to data/rings.json<br/>& Render Red in Dashboard"]
-    RING --> VAL["Benchmark Against True Ring IDs<br/>• Ring Recall: 4 of 4 (100%)<br/>• Detection Delay: 66.0 seconds"]
+    RING --> VAL["Benchmark Against True Ring IDs<br/>• Ring Recall: 5 of 5 (100%)<br/>• Detection Delay: 98.0 seconds"]
 ```
 
 ---
