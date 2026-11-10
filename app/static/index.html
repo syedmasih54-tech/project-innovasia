@@ -140,120 +140,6 @@
       height: 100%;
     }
 
-    /* =========================================================================
-       GLASS ICONS (React Bits Architecture)
-       ========================================================================= */
-    .glass-icon-wrapper {
-      position: relative;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      perspective: 700px;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .glass-icon-box {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .glass-icon-plate {
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-      transform: rotate(26deg);
-      transform-origin: 90% 90%;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-      will-change: transform, opacity;
-      box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.22);
-    }
-
-    .glass-icon-glass {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      border-radius: 14px;
-      backdrop-filter: blur(14px) saturate(1.6);
-      -webkit-backdrop-filter: blur(14px) saturate(1.6);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.32) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 10px 24px -6px rgba(18, 17, 16, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.95);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
-      will-change: transform;
-    }
-
-    .glass-icon-shine {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0) 55%);
-      pointer-events: none;
-    }
-
-    .glass-icon-face {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      z-index: 2;
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
-      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
-    }
-
-    .glass-icon-label {
-      margin-top: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: #71695F;
-      text-align: center;
-      transition: color 0.2s ease, transform 0.2s ease;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-
-    .glass-icon-wrapper:hover .glass-icon-label {
-      color: #121110;
-      transform: translateY(-2px);
-    }
-
-    /* React Bits Color Gradients */
-    .plate-red { background: linear-gradient(135deg, hsl(354, 95%, 68%), hsl(342, 80%, 52%)); }
-    .plate-blue { background: linear-gradient(135deg, hsl(214, 95%, 66%), hsl(226, 80%, 50%)); }
-    .plate-purple { background: linear-gradient(135deg, hsl(276, 84%, 70%), hsl(262, 66%, 52%)); }
-    .plate-indigo { background: linear-gradient(135deg, hsl(236, 90%, 72%), hsl(246, 64%, 54%)); }
-    .plate-orange { background: linear-gradient(135deg, hsl(38, 100%, 62%), hsl(20, 94%, 54%)); }
-    .plate-amber { background: linear-gradient(135deg, hsl(32, 98%, 56%), hsl(18, 92%, 48%)); }
-    .plate-green { background: linear-gradient(135deg, hsl(146, 66%, 54%), hsl(162, 82%, 34%)); }
-    .plate-teal { background: linear-gradient(135deg, hsl(184, 80%, 56%), hsl(196, 84%, 40%)); }
-    .plate-pink { background: linear-gradient(135deg, hsl(326, 92%, 74%), hsl(314, 70%, 54%)); }
-    .plate-graphite { background: linear-gradient(135deg, hsl(250, 6%, 46%), hsl(250, 8%, 22%)); }
-    .plate-silver { background: linear-gradient(135deg, hsl(240, 6%, 92%), hsl(240, 5%, 70%)); }
-    .plate-obsidian { background: linear-gradient(135deg, #2A2826, #121110); }
-
-    /* Interactive Spring Hover & Press (React Bits 'lift' + 'press') */
-    .glass-icon-wrapper:hover .glass-icon-glass {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 16px 32px -8px rgba(18, 17, 16, 0.22), inset 0 1px 2px rgba(255, 255, 255, 1);
-    }
-    .glass-icon-wrapper:hover .glass-icon-plate {
-      transform: rotate(35deg) translate(-2px, -3px) scale(1.1);
-    }
-    .glass-icon-wrapper:hover .glass-icon-face {
-      transform: translateY(-5px) scale(1.05);
-    }
-    .glass-icon-wrapper:active .glass-icon-glass {
-      transform: translateY(-1px) scale(0.97);
-    }
-    .glass-icon-wrapper:active .glass-icon-plate {
-      transform: rotate(28deg) scale(1.02);
-    }
-
     /* Scrollbars */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #FAF8F5; }
@@ -266,20 +152,12 @@
   <!-- TOP LUXURY FLOATING NAVBAR -->
   <header class="sticky top-0 z-50 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-[#ECE7E1] px-6 lg:px-12 py-3.5 flex items-center justify-between gap-4 transition-all">
     
-    <!-- Left: Brand Logo with GlassIcons 3D Badge -->
+    <!-- Left: Brand Logo -->
     <div class="flex items-center gap-3">
-      <div class="glass-icon-wrapper" style="width: 42px; height: 42px;" data-tilt onclick="switchTab('ops')" title="StreamShield Engine Command">
-        <div class="glass-icon-box" style="width: 42px; height: 42px;">
-          <div class="glass-icon-plate plate-red"></div>
-          <div class="glass-icon-glass">
-            <div class="glass-icon-shine"></div>
-          </div>
-          <div class="glass-icon-face text-white">
-            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6l-9-4zm-1 16l-4-4 1.41-1.41L11 15.17l6.59-6.59L19 10l-8 8z"/>
-            </svg>
-          </div>
-        </div>
+      <div onclick="switchTab('ops')" class="w-10 h-10 rounded-2xl bg-obsidian text-white flex items-center justify-center font-extrabold text-xl tracking-tighter shadow-sm cursor-pointer hover:bg-slate-800 transition" title="StreamShield Engine">
+        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6l-9-4zm-1 16l-4-4 1.41-1.41L11 15.17l6.59-6.59L19 10l-8 8z"/>
+        </svg>
       </div>
       <div>
         <div class="flex items-center gap-2">
@@ -372,107 +250,6 @@
           <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
           Stress Test (2,000 TPS)
         </button>
-      </div>
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- INTERACTIVE GLASS ICONS DOCK (React Bits Architecture) -->
-    <!-- ========================================================================= -->
-    <div class="bg-[#FAF8F5]/80 backdrop-blur-md rounded-[32px] p-5 border border-[#ECE7E1] shadow-card-soft">
-      <div class="flex items-center justify-between mb-4 px-2">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-sunset-start animate-ping"></span>
-          <span class="text-xs font-bold uppercase tracking-wider text-[#71695F]">Command Dock · React Bits Glass Icons</span>
-        </div>
-        <span class="text-[11px] font-semibold text-[#8C847A] hidden sm:inline">Tactile 3D Glass · Click or Hover to Explore Modules</span>
-      </div>
-      
-      <div class="grid grid-cols-3 sm:grid-cols-6 gap-4 sm:gap-6 justify-items-center">
-        
-        <!-- Dock Item 1: Live Ops (Red) -->
-        <div onclick="switchTab('ops')" class="glass-icon-wrapper group" data-tilt title="Switch to Real-Time Operations">
-          <div class="glass-icon-box" style="width: 58px; height: 58px;">
-            <div class="glass-icon-plate plate-red"></div>
-            <div class="glass-icon-glass">
-              <div class="glass-icon-shine"></div>
-            </div>
-            <div class="glass-icon-face text-white">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-          </div>
-          <span class="glass-icon-label">Live Threat Ops</span>
-        </div>
-
-        <!-- Dock Item 2: Mule Rings Graph (Orange/Amber) -->
-        <div onclick="switchTab('graph')" class="glass-icon-wrapper group" data-tilt title="Inspect 5/5 Mule Rings in Network Graph">
-          <div class="glass-icon-box" style="width: 58px; height: 58px;">
-            <div class="glass-icon-plate plate-orange"></div>
-            <div class="glass-icon-glass">
-              <div class="glass-icon-shine"></div>
-            </div>
-            <div class="glass-icon-face text-white">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            </div>
-          </div>
-          <span class="glass-icon-label">Mule Rings (5/5)</span>
-        </div>
-
-        <!-- Dock Item 3: Cost Policy Simulator (Green) -->
-        <div onclick="switchTab('policy')" class="glass-icon-wrapper group" data-tilt title="Tune Economic Cost Policy and Friction Thresholds">
-          <div class="glass-icon-box" style="width: 58px; height: 58px;">
-            <div class="glass-icon-plate plate-green"></div>
-            <div class="glass-icon-glass">
-              <div class="glass-icon-shine"></div>
-            </div>
-            <div class="glass-icon-face text-white">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-          </div>
-          <span class="glass-icon-label">Cost Optimizer</span>
-        </div>
-
-        <!-- Dock Item 4: Model Drift R2 (Purple) -->
-        <div onclick="switchTab('drift')" class="glass-icon-wrapper group" data-tilt title="Analyze Adversarial Drift and Feature Invariants">
-          <div class="glass-icon-box" style="width: 58px; height: 58px;">
-            <div class="glass-icon-plate plate-purple"></div>
-            <div class="glass-icon-glass">
-              <div class="glass-icon-shine"></div>
-            </div>
-            <div class="glass-icon-face text-white">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            </div>
-          </div>
-          <span class="glass-icon-label">Drift Audit (R2)</span>
-        </div>
-
-        <!-- Dock Item 5: DPDP Consortium (Indigo) -->
-        <div onclick="switchTab('consortium')" class="glass-icon-wrapper group" data-tilt title="DPDP-Compliant HMAC Token Blinded Consortium">
-          <div class="glass-icon-box" style="width: 58px; height: 58px;">
-            <div class="glass-icon-plate plate-indigo"></div>
-            <div class="glass-icon-glass">
-              <div class="glass-icon-shine"></div>
-            </div>
-            <div class="glass-icon-face text-white">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            </div>
-          </div>
-          <span class="glass-icon-label">DPDP Privacy</span>
-        </div>
-
-        <!-- Dock Item 6: 2k TPS Stress Replay (Teal) -->
-        <div onclick="runFastReplay()" class="glass-icon-wrapper group" data-tilt title="Run 2,000 TPS Pre-Settlement Benchmark">
-          <div class="glass-icon-box" style="width: 58px; height: 58px;">
-            <div class="glass-icon-plate plate-teal"></div>
-            <div class="glass-icon-glass">
-              <div class="glass-icon-shine"></div>
-            </div>
-            <div class="glass-icon-face text-white">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
-            </div>
-          </div>
-          <span class="glass-icon-label">2k TPS Replay</span>
-        </div>
-
       </div>
     </div>
 
@@ -669,20 +446,12 @@
         <!-- RIGHT 40%: 4 CATEGORY METRIC TILES (EXACT REPLICA FROM USER SCREENSHOT) -->
         <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-          <!-- Tile 1: Mule Rings Caught (Replica of 'Groceries' Card with GlassIcon) -->
+          <!-- Tile 1: Mule Rings Caught (Replica of 'Groceries' Card) -->
           <div onclick="switchTab('graph')" class="bg-white rounded-[28px] p-6 border border-[#ECE7E1] shadow-card-soft spring-hover flex flex-col justify-between min-h-[160px] cursor-pointer group">
             <div class="flex justify-between items-start">
               <span class="text-xs font-semibold text-[#8C847A]">Mule Rings Caught</span>
-              <div class="glass-icon-wrapper" style="width: 44px; height: 44px;" data-tilt>
-                <div class="glass-icon-box" style="width: 44px; height: 44px;">
-                  <div class="glass-icon-plate plate-red"></div>
-                  <div class="glass-icon-glass">
-                    <div class="glass-icon-shine"></div>
-                  </div>
-                  <div class="glass-icon-face text-white">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                  </div>
-                </div>
+              <div class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center border border-rose-100/60 shadow-xs group-hover:scale-105 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
               </div>
             </div>
             <div>
@@ -694,20 +463,12 @@
             </div>
           </div>
 
-          <!-- Tile 2: Sub-150ms SLA (Replica of 'Clothes and Shoes' Card with GlassIcon) -->
+          <!-- Tile 2: Sub-150ms SLA (Replica of 'Clothes and Shoes' Card) -->
           <div onclick="switchTab('arch')" class="bg-white rounded-[28px] p-6 border border-[#ECE7E1] shadow-card-soft spring-hover flex flex-col justify-between min-h-[160px] cursor-pointer group">
             <div class="flex justify-between items-start">
               <span class="text-xs font-semibold text-[#8C847A]">Decision Latency</span>
-              <div class="glass-icon-wrapper" style="width: 44px; height: 44px;" data-tilt>
-                <div class="glass-icon-box" style="width: 44px; height: 44px;">
-                  <div class="glass-icon-plate plate-blue"></div>
-                  <div class="glass-icon-glass">
-                    <div class="glass-icon-shine"></div>
-                  </div>
-                  <div class="glass-icon-face text-white">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                  </div>
-                </div>
+              <div class="w-10 h-10 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-100/60 shadow-xs group-hover:scale-105 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
               </div>
             </div>
             <div>
@@ -719,20 +480,12 @@
             </div>
           </div>
 
-          <!-- Tile 3: Precision-Recall AUC (Replica of 'Cafes & Restaurants' Card with GlassIcon) -->
+          <!-- Tile 3: Precision-Recall AUC (Replica of 'Cafes & Restaurants' Card) -->
           <div onclick="switchTab('drift')" class="bg-white rounded-[28px] p-6 border border-[#ECE7E1] shadow-card-soft spring-hover flex flex-col justify-between min-h-[160px] cursor-pointer group">
             <div class="flex justify-between items-start">
               <span class="text-xs font-semibold text-[#8C847A]">Model PR-AUC</span>
-              <div class="glass-icon-wrapper" style="width: 44px; height: 44px;" data-tilt>
-                <div class="glass-icon-box" style="width: 44px; height: 44px;">
-                  <div class="glass-icon-plate plate-purple"></div>
-                  <div class="glass-icon-glass">
-                    <div class="glass-icon-shine"></div>
-                  </div>
-                  <div class="glass-icon-face text-white">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                  </div>
-                </div>
+              <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100/60 shadow-xs group-hover:scale-105 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
               </div>
             </div>
             <div>
@@ -744,20 +497,12 @@
             </div>
           </div>
 
-          <!-- Tile 4: Blinded Consortium (Replica of 'Sport' Card with GlassIcon) -->
+          <!-- Tile 4: Blinded Consortium (Replica of 'Sport' Card) -->
           <div onclick="switchTab('consortium')" class="bg-white rounded-[28px] p-6 border border-[#ECE7E1] shadow-card-soft spring-hover flex flex-col justify-between min-h-[160px] cursor-pointer group">
             <div class="flex justify-between items-start">
               <span class="text-xs font-semibold text-[#8C847A]">Consortium Privacy</span>
-              <div class="glass-icon-wrapper" style="width: 44px; height: 44px;" data-tilt>
-                <div class="glass-icon-box" style="width: 44px; height: 44px;">
-                  <div class="glass-icon-plate plate-amber"></div>
-                  <div class="glass-icon-glass">
-                    <div class="glass-icon-shine"></div>
-                  </div>
-                  <div class="glass-icon-face text-white">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  </div>
-                </div>
+              <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100/60 shadow-xs group-hover:scale-105 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
               </div>
             </div>
             <div>
@@ -1935,57 +1680,11 @@
     // Initialize application
     window.addEventListener('DOMContentLoaded', async () => {
       initTechText();
-      initGlassIcons();
       buildHistogramBars();
       await fetchFreshData();
       startStreamLoop();
       drawMuleGraph();
     });
-
-    // =========================================================================
-    // GLASS ICONS INTERACTION ENGINE (React Bits 3D Parallax & Tilt)
-    // =========================================================================
-    function initGlassIcons() {
-      const icons = document.querySelectorAll('.glass-icon-wrapper');
-      icons.forEach(icon => {
-        const glass = icon.querySelector('.glass-icon-glass');
-        const plate = icon.querySelector('.glass-icon-plate');
-        const face = icon.querySelector('.glass-icon-face');
-
-        icon.addEventListener('pointermove', e => {
-          const rect = icon.getBoundingClientRect();
-          const x = (e.clientX - rect.left) / rect.width - 0.5;
-          const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-          if (glass) {
-            glass.style.transform = `translateY(-6px) scale(1.06) rotateX(${-y * 24}deg) rotateY(${x * 24}deg)`;
-          }
-          if (plate) {
-            plate.style.transform = `rotate(${26 + x * 16}deg) translate(${-x * 8}px, ${-y * 8}px) scale(1.12)`;
-          }
-          if (face) {
-            face.style.transform = `translateY(-6px) translate(${x * 4}px, ${y * 4}px)`;
-          }
-        });
-
-        icon.addEventListener('pointerleave', () => {
-          if (glass) glass.style.transform = '';
-          if (plate) plate.style.transform = '';
-          if (face) face.style.transform = '';
-        });
-
-        icon.addEventListener('pointerdown', () => {
-          if (glass) glass.style.transform = 'translateY(-1px) scale(0.96)';
-          if (plate) plate.style.transform = 'rotate(24deg) scale(1.02)';
-          if (face) face.style.transform = 'translateY(-1px) scale(0.96)';
-        });
-
-        icon.addEventListener('pointerup', () => {
-          if (glass) glass.style.transform = 'translateY(-6px) scale(1.06)';
-          if (face) face.style.transform = 'translateY(-6px) scale(1.06)';
-        });
-      });
-    }
 
     // Generate Animated Histogram Bars for Overview Card
     function buildHistogramBars() {
