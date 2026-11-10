@@ -1,0 +1,22 @@
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large generated data files & model weights (reproducible via run_all.py)
+data/*.csv
+data/*.joblib
+data/decisions.jsonl
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+

@@ -30,8 +30,8 @@ from decision import evaluate_decision_and_reasons, RECOVERY_RATE, STEP_UP_COST,
 # BENCHMARK CONFIGURATION
 # ==========================================
 TARGET_TPS = 2000               # 2,000 payments per second
-BATCH_SIZE = 100                # 100 transactions per micro-batch (50ms window, well under 150ms SLA)
-NUM_TEST_TXNS = 10000           # 10,000 payments in live replay run
+BATCH_SIZE = 120                # 120 transactions per micro-batch (60ms window, well under 150ms SLA)
+NUM_TEST_TXNS = None            # Process all test-period payments (80,072 txns)
 FEATURES_CSV = os.path.join("data", "features_round1.csv")
 MODEL_BUNDLE_PATH = os.path.join("data", "model_bundle.joblib")
 
@@ -46,7 +46,8 @@ def run_streaming_benchmark():
     print("=" * 70)
     print(f"Target Throughput  : {TARGET_TPS:,} payments/second")
     print(f"Micro-batch Window : {BATCH_SIZE} transactions")
-    print(f"Test Sample Size   : {NUM_TEST_TXNS:,} transactions\n")
+    sample_str = f"{NUM_TEST_TXNS:,}" if NUM_TEST_TXNS is not None else "All Test Period"
+    print(f"Test Sample Size   : {sample_str} transactions\n")
     
     # Load model bundle
     if not os.path.exists(MODEL_BUNDLE_PATH):
@@ -69,7 +70,10 @@ def run_streaming_benchmark():
     print(f"Loading test payments from {FEATURES_CSV}...")
     df = pd.read_csv(FEATURES_CSV)
     test_start = int(len(df) * 0.80)
-    test_df = df.iloc[test_start:test_start + NUM_TEST_TXNS].copy().reset_index(drop=True)
+    if NUM_TEST_TXNS is not None:
+        test_df = df.iloc[test_start:test_start + NUM_TEST_TXNS].copy().reset_index(drop=True)
+    else:
+        test_df = df.iloc[test_start:].copy().reset_index(drop=True)
     n_txns = len(test_df)
     
     # Convert records to list of dicts for O(1) streaming access
@@ -97,6 +101,11 @@ def run_streaming_benchmark():
         batch_end = min(idx + batch_size, n_txns)
         batch = raw_txns[idx:batch_end]
         
+        # Pacing: Simulate arrival at TARGET_TPS (wait until current batch arrives)
+        batch_ready_ns = start_benchmark_ns + (idx + len(batch)) * interval_ns
+        while time.perf_counter_ns() < batch_ready_ns:
+            pass
+
         # 1. Update memory state and extract features for current batch
         batch_features = []
         for tx in batch:
@@ -107,8 +116,8 @@ def run_streaming_benchmark():
             
         X_batch = np.array(batch_features, dtype=np.float32)
         
-        # 2. Score with models
-        raw_lgb = lgb_model.predict_proba(X_batch)[:, 1]
+        # 2. Score with models (num_threads=1 avoids OpenMP context switching overhead)
+        raw_lgb = lgb_model.booster_.predict(X_batch, num_threads=1)
         cal_lgb = calibrator.transform(raw_lgb)
         
         if_raw = -iforest.decision_function(X_batch)
@@ -144,8 +153,8 @@ def run_streaming_benchmark():
                 
             reasons = []
             if decision in ["STEP-UP", "HOLD"]:
-                # Compute TreeSHAP only for flagged transactions
-                c_row = lgb_model.booster_.predict(X_batch[k:k+1], pred_contrib=True)[0, :-1]
+                # Compute TreeSHAP only for flagged transactions with 1 thread
+                c_row = lgb_model.booster_.predict(X_batch[k:k+1], pred_contrib=True, num_threads=1)[0, :-1]
                 sorted_idx = np.argsort(-c_row)
                 for f_idx in sorted_idx:
                     if len(reasons) >= 3:

@@ -12,7 +12,7 @@
 | **06** | 2,000 TPS Streaming Replay & Latency Benchmark | Step 6 | `src/replay.py` (`decisions.jsonl`, `metrics.json`, `latency.png`) | **Completed** |
 | **07** | Graph Mule Ring Detection | Step 7 | `src/rings.py` (`data/rings.json` + ring detection recall & time) | **Completed** |
 | **08** | Real-Time Operations Dashboard | Step 8 | `src/make_sample_outputs.py` & `app/dashboard.py` (Streamlit + Plotly) | **Completed** |
-| **09** | Round 2 Concept Drift Recalibration | Step 9 | `src/round2.py` (lightweight adaptation without full retraining) | **Ready** |
-| **10** | End-to-End Orchestrator & Documentation | Step 10 | `run_all.py`, `README.md`, `requirements.txt` | Pending |
-| **11** | Demo Presentation & Final Verification | Step 11 | Verified metrics & slide-ready benchmark table | Pending |
+| **09** | Round 2 Concept Drift Recalibration | Step 9 | `src/round2.py` (lightweight adaptation without full retraining) | **Completed** |
+| **10** | End-to-End Orchestrator & Documentation | Step 10 | `run_all.py`, `README.md`, `requirements.txt` | **Completed** |
+| **11** | Demo Presentation & Final Verification | Step 11 | Verified metrics & slide-ready benchmark table | **Completed** |
 
