@@ -60,45 +60,237 @@ def format_feature_reason(col_name, val):
         return f"Unusual pattern detected in {col_name}"
 
 
-def evaluate_decision_and_reasons(amount, fraud_prob, feature_vector, lgb_model, feature_names):
+def generate_customer_message(decision):
+    """
+    Returns a short, reassuring customer-facing sentence.
+    NEVER reveals internal model facts, risk scores, or decision thresholds.
+    """
+    if decision == "STEP-UP":
+        return "We paused this payment to check the payee is safe. Please confirm to continue."
+    elif decision == "HOLD":
+        return "This transfer was temporarily placed on hold for your account security. Our support team is reviewing it."
+    else:
+        return "Payment processed successfully."
+
+
+# Typical values seen in legitimate (ALLOW) payments
+TYPICAL_ALLOW_VALUES = {
+    "sender_age_days": 180.0,
+    "receiver_age_days": 180.0,
+    "amount": 450.0,
+    "sender_amount_ratio": 1.0,
+    "is_new_receiver": 0.0,
+    "sender_tx_count_1h": 1.0,
+    "device_changed": 0.0,
+    "receiver_distinct_senders_24h": 1.0,
+    "receiver_distinct_receivers_24h": 1.0,
+    "pass_through_ratio_30m": 0.0,
+    "minutes_since_last_inflow": 9999.0
+}
+
+
+def generate_counterfactual(feature_vector, amount, lgb_model, calibrator, feature_names):
+    """
+    Counterfactual Explanation:
+    For flagged payments only, changes each of the top 3 contributing facts one at a time
+    to the typical value seen in ALLOW payments, re-scores, and reports the smallest single
+    change that flips the decision to ALLOW.
+    Visible to fraud operations officers only.
+    """
+    vec_2d = feature_vector.reshape(1, -1)
+    try:
+        contribs = lgb_model.booster_.predict(vec_2d, pred_contrib=True)[0, :-1]
+    except Exception:
+        return ""
+
+    sorted_indices = np.argsort(-contribs)
+    top_indices = [idx for idx in sorted_indices if contribs[idx] > 0]
+    if not top_indices:
+        top_indices = list(sorted_indices[:3])
+    else:
+        top_indices = top_indices[:3]
+
+    for f_idx in top_indices:
+        feat_name = feature_names[f_idx]
+        test_vec = feature_vector.copy()
+        test_vec[f_idx] = TYPICAL_ALLOW_VALUES.get(feat_name, 0.0)
+
+        test_amt = amount
+        if feat_name == "amount":
+            test_amt = min(15000.0, max(1000.0, amount * 0.25))
+
+        test_vec_2d = test_vec.reshape(1, -1)
+        try:
+            raw_p = lgb_model.predict_proba(test_vec_2d)[:, 1]
+            if calibrator is not None:
+                cal_p = float(np.clip(calibrator.predict(raw_p)[0], 0.0, 1.0))
+            else:
+                cal_p = float(raw_p[0])
+        except Exception:
+            continue
+
+        exp_loss = cal_p * test_amt * (1.0 - RECOVERY_RATE)
+        fric = STEP_UP_COST + (1.0 - cal_p) * ABANDON_PROB * test_amt
+
+        new_decision = "HOLD" if exp_loss >= HOLD_THRESHOLD else ("STEP-UP" if exp_loss >= fric else "ALLOW")
+
+        if new_decision == "ALLOW":
+            if feat_name == "sender_age_days":
+                return "would be allowed if sender account age were above 30 days"
+            elif feat_name == "receiver_age_days":
+                return "would be allowed if receiver account age were above 30 days"
+            elif feat_name == "is_new_receiver":
+                return "would be allowed if recipient were a previously verified contact"
+            elif feat_name == "device_changed":
+                return "would be allowed if initiated from user's primary registered device"
+            elif feat_name == "amount":
+                return f"would be allowed if transfer amount were under Rs {int(max(1000, test_amt)):,}"
+            elif feat_name == "pass_through_ratio_30m":
+                return "would be allowed if recipient did not rapidly forward funds within 30 minutes"
+            elif feat_name == "minutes_since_last_inflow":
+                return "would be allowed if settlement turnaround were standard"
+            elif feat_name == "sender_tx_count_1h":
+                return "would be allowed if sender velocity were within normal hourly limits"
+            elif feat_name == "sender_amount_ratio":
+                return "would be allowed if amount matched sender's historical spending profile"
+            elif feat_name == "receiver_distinct_senders_24h":
+                return "would be allowed if recipient inbound velocity were standard"
+            else:
+                return f"would be allowed if {feat_name} were at normal baseline"
+
+    return "would require both familiar recipient status and lower transfer amount to allow"
+
+
+def compute_cost_policy(p, amount, is_fraud=None, recovery_rate=RECOVERY_RATE,
+                        step_up_cost=STEP_UP_COST, abandon_rate=ABANDON_PROB,
+                        hold_threshold=HOLD_THRESHOLD):
+    """
+    ONE shared function used by the decision engine, the totals and the sliders.
+    Formulas:
+      expected_loss = p * amount * (1 - recovery_rate)
+      friction_estimate = step_up_cost + (1 - p) * abandon_rate * amount
+      decision: HOLD if expected_loss > hold_threshold;
+                else STEP-UP if expected_loss > friction_estimate;
+                else ALLOW.
+    Totals over replay or test payments (when is_fraud is provided):
+      rupees_prevented = sum over flagged payments with is_fraud = 1 of amount * (1 - recovery_rate)
+      friction_incurred = sum over all flagged payments of step_up_cost
+                          + sum over flagged payments with is_fraud = 0 of abandon_rate * amount
+      multiplier = rupees_prevented / friction_incurred (show "-" if friction is 0)
+    """
+    p_arr = np.asarray(p, dtype=np.float64)
+    amt_arr = np.asarray(amount, dtype=np.float64)
+    is_scalar = (p_arr.ndim == 0 and amt_arr.ndim == 0)
+
+    expected_loss = p_arr * amt_arr * (1.0 - recovery_rate)
+    friction_estimate = step_up_cost + (1.0 - p_arr) * abandon_rate * amt_arr
+
+    is_hold = expected_loss > hold_threshold
+    is_stepup = (~is_hold) & (expected_loss > friction_estimate)
+    is_allow = (~is_hold) & (~is_stepup)
+    is_flagged = is_hold | is_stepup
+
+    if is_scalar:
+        if is_hold:
+            decision = "HOLD"
+        elif is_stepup:
+            decision = "STEP-UP"
+        else:
+            decision = "ALLOW"
+        return decision, float(expected_loss), float(friction_estimate)
+
+    decisions = np.where(is_hold, "HOLD", np.where(is_stepup, "STEP-UP", "ALLOW"))
+    counts = {
+        "ALLOW": int(np.sum(is_allow)),
+        "STEP-UP": int(np.sum(is_stepup)),
+        "HOLD": int(np.sum(is_hold))
+    }
+    total_tx = max(len(p_arr), 1)
+    allow_pct = round((counts["ALLOW"] / total_tx) * 100.0, 1)
+    step_up_pct = round((counts["STEP-UP"] / total_tx) * 100.0, 1)
+    hold_pct = round((counts["HOLD"] / total_tx) * 100.0, 1)
+    flagged_share_pct = round((np.sum(is_flagged) / total_tx) * 100.0, 2)
+
+    result = {
+        "decisions": decisions,
+        "expected_loss": expected_loss,
+        "friction_estimate": friction_estimate,
+        "counts": counts,
+        "allow_pct": allow_pct,
+        "step_up_pct": step_up_pct,
+        "hold_pct": hold_pct,
+        "flagged_share_pct": flagged_share_pct,
+        "is_flagged": is_flagged
+    }
+
+    if is_fraud is not None:
+        fraud_arr = np.asarray(is_fraud, dtype=np.int64)
+        good_mask = (fraud_arr == 0)
+        fraud_mask = (fraud_arr == 1)
+
+        rupees_prevented = float(np.sum(amt_arr[is_flagged & fraud_mask] * (1.0 - recovery_rate)))
+        friction_incurred = float(np.sum(step_up_cost * is_flagged) + np.sum(abandon_rate * amt_arr[is_flagged & good_mask]))
+
+        if friction_incurred > 0:
+            multiplier = round(rupees_prevented / friction_incurred, 1)
+        else:
+            multiplier = "-"
+
+        total_good = max(int(np.sum(good_mask)), 1)
+        good_flagged = int(np.sum(is_flagged & good_mask))
+        false_alarm_rate_pct = round((good_flagged / total_good) * 100.0, 2)
+        net_benefit = rupees_prevented - friction_incurred
+
+        result.update({
+            "rupees_prevented": round(rupees_prevented, 2),
+            "rupees_friction": round(friction_incurred, 2),
+            "friction_incurred": round(friction_incurred, 2),
+            "net_benefit": round(net_benefit, 2),
+            "multiplier": multiplier,
+            "false_alarm_rate_pct": false_alarm_rate_pct
+        })
+
+    return result
+
+
+def evaluate_decision_and_reasons(amount, fraud_prob, feature_vector, lgb_model, feature_names, calibrator=None):
     """
     REUSABLE FUNCTION:
-    Computes expected loss, friction, decision (ALLOW, STEP-UP, HOLD), and reasons.
-    Can be imported and called on single transactions during live streaming replay.
+    Computes expected loss, friction, decision (ALLOW, STEP-UP, HOLD),
+    officer_reasons (up to 3 plain-English facts), customer_message (safe, non-leaking),
+    and counterfactual ('what would change this decision').
     """
-    expected_loss = fraud_prob * amount * (1.0 - RECOVERY_RATE)
-    friction = STEP_UP_COST + (1.0 - fraud_prob) * ABANDON_PROB * amount
-    
-    if expected_loss >= HOLD_THRESHOLD:
-        decision = "HOLD"
-    elif expected_loss >= friction:
-        decision = "STEP-UP"
-    else:
-        decision = "ALLOW"
+    decision, expected_loss, friction = compute_cost_policy(fraud_prob, amount)
         
-    reasons = []
+    officer_reasons = []
+    customer_message = generate_customer_message(decision)
+    counterfactual = ""
+
     if decision in ["STEP-UP", "HOLD"]:
         # Compute TreeSHAP contributions for this transaction
         vec_2d = feature_vector.reshape(1, -1)
-        contribs = lgb_model.booster_.predict(vec_2d, pred_contrib=True)[0, :-1]
-        
-        # Sort features by highest positive contribution (features pushing risk UP)
+        try:
+            contribs = lgb_model.booster_.predict(vec_2d, pred_contrib=True)[0, :-1]
+        except Exception:
+            contribs = np.zeros(len(feature_names))
+
         sorted_indices = np.argsort(-contribs)
         
         for idx in sorted_indices:
-            if len(reasons) >= 3:
+            if len(officer_reasons) >= 3:
                 break
             feat_name = feature_names[idx]
             val = feature_vector[idx]
-            # Ignore features that are 0 or negative contribution
-            if contribs[idx] > 0.0 or len(reasons) == 0:
-                reasons.append(format_feature_reason(feat_name, val))
+            if contribs[idx] > 0.0 or len(officer_reasons) == 0:
+                officer_reasons.append(format_feature_reason(feat_name, val))
                 
-        # Fallback if no specific feature had positive contribution
-        if not reasons:
-            reasons.append(f"Elevated risk score ({fraud_prob*100:.1f}%) exceeding safety policy")
-            
-    return decision, expected_loss, friction, reasons
+        if not officer_reasons:
+            officer_reasons.append(f"Elevated risk score ({fraud_prob*100:.1f}%) exceeding safety policy")
+
+        # Compute Counterfactual
+        counterfactual = generate_counterfactual(feature_vector, amount, lgb_model, calibrator, feature_names)
+
+    return decision, expected_loss, friction, officer_reasons, customer_message, counterfactual
 
 
 def main():
@@ -147,63 +339,39 @@ def main():
     hybrid_scores = (1.0 - w) * (cal_lgb + 1e-6 * raw_lgb) + w * if_scores
     hybrid_scores = np.clip(hybrid_scores, 0.0, 1.0)
     
-    # 2. Vectorized batch decisioning for speed
-    expected_losses = hybrid_scores * amounts * (1.0 - RECOVERY_RATE)
-    frictions = STEP_UP_COST + (1.0 - hybrid_scores) * ABANDON_PROB * amounts
-    
-    decisions = []
-    rupees_prevented = 0.0
-    rupees_friction = 0.0
-    
-    flagged_indices = []
-    
-    for i in range(n_test):
-        el = expected_losses[i]
-        fr = frictions[i]
-        amt = amounts[i]
-        is_fraud = y_test[i]
-        
-        if el >= HOLD_THRESHOLD:
-            dec = "HOLD"
-        elif el >= fr:
-            dec = "STEP-UP"
-        else:
-            dec = "ALLOW"
-            
-        decisions.append(dec)
-        
-        # Financial impact tracking
-        if dec in ["STEP-UP", "HOLD"]:
-            flagged_indices.append(i)
-            if is_fraud == 1:
-                # Fraud prevented (adjusted by what we save)
-                rupees_prevented += amt * (1.0 - RECOVERY_RATE)
-            else:
-                # Friction caused on good customers
-                if dec == "STEP-UP":
-                    rupees_friction += STEP_UP_COST + ABANDON_PROB * amt
-                else:
-                    rupees_friction += amt
+    # 2. Shared policy decisioning
+    policy_res = compute_cost_policy(
+        hybrid_scores, amounts, is_fraud=y_test,
+        recovery_rate=RECOVERY_RATE,
+        step_up_cost=STEP_UP_COST,
+        abandon_rate=ABANDON_PROB,
+        hold_threshold=HOLD_THRESHOLD
+    )
+    decisions = list(policy_res["decisions"])
+    rupees_prevented = policy_res["rupees_prevented"]
+    rupees_friction = policy_res["rupees_friction"]
+    flagged_indices = np.where(policy_res["is_flagged"])[0].tolist()
                     
     test_df["score"] = hybrid_scores
     test_df["decision"] = decisions
     
-    allow_count = decisions.count("ALLOW")
-    step_up_count = decisions.count("STEP-UP")
-    hold_count = decisions.count("HOLD")
+    allow_count = policy_res["counts"]["ALLOW"]
+    step_up_count = policy_res["counts"]["STEP-UP"]
+    hold_count = policy_res["counts"]["HOLD"]
     
     print("=" * 70)
     print(" BUSINESS DECISION SUMMARY (TEST PERIOD)")
     print("=" * 70)
     print(f"Total Evaluated : {n_test:,}")
-    print(f"ALLOW Decisions : {allow_count:,} ({allow_count/n_test*100:.2f}%)")
-    print(f"STEP-UP (Verify): {step_up_count:,} ({step_up_count/n_test*100:.2f}%)")
-    print(f"HOLD (Blocked)  : {hold_count:,} ({hold_count/n_test*100:.2f}%)")
+    print(f"ALLOW Decisions : {allow_count:,} ({policy_res['allow_pct']}%)")
+    print(f"STEP-UP (Verify): {step_up_count:,} ({policy_res['step_up_pct']}%)")
+    print(f"HOLD (Blocked)  : {hold_count:,} ({policy_res['hold_pct']}%)")
     print("-" * 70)
     print(f"Rupees of Fraud Prevented : Rs {rupees_prevented:,.2f}")
     print(f"Rupees of Friction Caused : Rs {rupees_friction:,.2f}")
-    roi = rupees_prevented / max(rupees_friction, 1.0)
-    print(f"Net Protection Multiplier : {roi:.1f}x (saved Rs {roi:.1f} for every Rs 1 of friction)")
+    roi = policy_res["multiplier"]
+    roi_str = f"{roi}x" if roi != "-" else "-"
+    print(f"Net Protection Multiplier : {roi_str} (saved Rs {roi_str} for every Rs 1 of friction)")
     print("=" * 70 + "\n")
     
     # 3. Print 10 Flagged Payments with their Plain-English Reasons
@@ -214,15 +382,18 @@ def main():
     sample_show = flagged_indices[:10]
     for idx_num, i in enumerate(sample_show):
         row = test_df.iloc[i]
-        _, _, _, reasons = evaluate_decision_and_reasons(
-            amounts[i], hybrid_scores[i], X_test[i], lgb_model, feature_cols
+        dec, exp_loss, fric, officer_reasons, cust_msg, cf = evaluate_decision_and_reasons(
+            amounts[i], hybrid_scores[i], X_test[i], lgb_model, feature_cols, calibrator=calibrator
         )
         fraud_label = "TRUE FRAUD" if row['is_fraud'] == 1 else "GOOD CUSTOMER"
         print(f"[{idx_num + 1}] Txn: {row['txn_id']} | Decision: {row['decision']} | Score: {row['score']:.3f} | Rs {row['amount']:,.2f} | ({fraud_label})")
         print(f"    Sender: {row['sender']} -> Receiver: {row['receiver']}")
-        print("    Reasons:")
-        for r in reasons:
+        print(f"    Customer Notice: \"{cust_msg}\"")
+        print("    Officer Reasons:")
+        for r in officer_reasons:
             print(f"      • {r}")
+        if cf:
+            print(f"    Counterfactual (Officers Only): {cf}")
         print()
     print("=" * 70)
     print("[SUCCESS] Step 5 complete: Decision engine & explainability ready.")

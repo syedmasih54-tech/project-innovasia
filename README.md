@@ -24,13 +24,13 @@ For every challenged or blocked transaction, StreamShield generates **up to 3 pl
 |---|---|---|:---:|
 | **Decision Latency (p99)** | $\le 150\text{ ms}$ | **0.48 ms (481.64 µs)** | **PASSED** (311x faster than SLA) |
 | **Streaming Throughput** | $\ge 2,000\text{ TPS}$ | **1,999.0 payments/second** | **PASSED** |
-| **Precision-Recall AUC (PR-AUC)** | Beat Simple Rules ($0.5429$) | **0.8966** | **+65% Improvement** |
+| **Precision-Recall AUC (PR-AUC)** | Beat Simple Rules ($0.5429$) | **0.6076** | **Outperforms Baseline Rules** |
 | **Recall @ 1% False Alarms** | Beat Simple Rules ($80.0\%$) | **98.33%** | **Catches 98.3% of fraud** |
 | **Mule Ring Detection** | Detect planted clusters | **5 of 5 (100.0%)** | **98s avg detection** |
 | **Direct Fraud Prevented** | Prevent Loss > Friction Cost | **₹22,26,133.58 (₹22.26 Lakhs)** | **PASSED** |
 | **Scale Tested** | Production Stress Test | **1,201,103 payments / 35,000 accounts** | **PASSED** |
 | **Severe Imbalance** | $< 0.1\%$ fraud rate | **0.088% (R1) & 0.096% (R2)** | **PASSED** |
-| **Drift Adaptation (Round 2)** | No Full Retraining | Sub-second online recalibration (5% sample) | **PR-AUC 0.8402 / Recall 99.4%** |
+| **Drift Adaptation (Round 2)** | No Full Retraining | Rapid online recalibration (5% sample) | **PR-AUC 0.2144 / FAR 0.06%** |
 
 ---
 

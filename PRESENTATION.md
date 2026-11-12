@@ -17,7 +17,7 @@
 >
 > *In StreamShield, every single transaction is evaluated **in under 0.48 milliseconds**—over **300 times faster** than the 150-millisecond SLA budget—while handling over **2,000 transactions per second** on a single standard machine.*
 >
-> *Under extreme class imbalance—where **fewer than 0.1%** of transactions are fraud—StreamShield achieves a **0.8966 PR-AUC** and catches **98.33% of all fraud at a strict 1% false alarm rate**, outperforming heuristic bank rules by 65%.*
+> *Under extreme class imbalance—where **fewer than 0.1%** of transactions are fraud—StreamShield achieves a **0.6076 PR-AUC** and catches **98.33% of all fraud at a strict 1% false alarm rate**, outperforming heuristic bank rules.*
 >
 > *Most importantly, StreamShield doesn't just score transactions; it protects balance sheets. Using our economic cost-utility policy, our engine intercepted **₹22.26 Lakhs** in direct fraud across 1.2 million payments while optimizing customer friction.*
 >
@@ -66,8 +66,8 @@ Open **`http://localhost:8080`** on your browser and guide the judges through th
   - Explain: *"Banks don't operate on abstract F1-scores; they operate on economic utility. We calculate `Expected Loss vs Checkout Friction` in Rupees."*
 
 ### Step 6: Adversarial Concept Drift & Consortium Privacy (Tabs 4 & 5)
-- **Tab 4 (`Drift R2`)**: Show how the unadapted model dropped from `0.89` to `0.72` PR-AUC when fraudsters switched to daisy chains and delayed payouts, and recovered to **`0.8402`** via sub-second isotonic recalibration on just 5% of the stream without offline retraining.
-- **Tab 5 (`Consortium`)**: Enter a UPI ID (`mule99@okhdfcbank`), select a bank, and click **`Submit Blinded Token`**. Show the HMAC-SHA256 blinded token broadcast across banks without exposing customer PII, fulfilling DPDP Act compliance.
+- **Tab 4 (`Drift R2`)**: Show how the unadapted model dropped to `0.2418` PR-AUC when fraudsters switched to daisy chains and delayed payouts, and was updated via rapid online recalibration in **`1.17s`** on just 5% of the stream without offline retraining, cutting false alarms to 0.06%.
+- **Tab 5 (`Consortium`)**: Enter a UPI ID (`mule99@okhdfcbank`), select a bank, and click **`Submit Blinded Token`**. Show the HMAC-SHA256 blinded token broadcast across banks without exposing customer PII.
 
 ---
 
@@ -85,7 +85,7 @@ Open **`http://localhost:8080`** on your browser and guide the judges through th
 > **Answer**: *"15% of accounts in our dataset are brand new (cold start). For zero-history accounts, we engineer structural priors: account age in days, time since first transaction, device novelty flag (0 or 1), and counterparty network velocity (whether the receiver has received from multiple senders in the last 24h). Even if the sender has no history, the receiver's pass-through ratio and burst velocity immediately flag mule recruitment."*
 
 ### Q4: *"How did you handle concept drift in Round 2 without retraining the whole model?"*
-> **Answer**: *"When fraudsters deployed 4-hop daisy chains and delayed payouts (30–120m), the unadapted PR-AUC degraded to 0.7241. Rather than retraining the 600,000-row LightGBM model (which takes minutes and causes downtime), we applied online Isotonic Probability Calibration on the first 5% of the streaming window. In under 0.42 seconds, PR-AUC recovered to 0.8402 and recall reached 99.4%, proving zero-downtime streaming adaptation."*
+> **Answer**: *"When fraudsters deployed 4-hop daisy chains and delayed payouts (30–120m), the unadapted PR-AUC degraded to 0.2418. Rather than retraining the 600,000-row LightGBM model (which takes minutes and causes downtime), we applied online blend weight and isotonic probability calibration on the first 5% of the streaming window in 1.17s. While the 5% window has only 13 fraud cases (limiting ranking gains to PR-AUC 0.2144), decision-level metrics stabilized false alarms at 0.06% and delivered positive net benefit."*
 
 ### Q5: *"How is your inter-bank signal sharing DPDP-compliant?"*
 > **Answer**: *"Under the Digital Personal Data Protection (DPDP) Act, banks cannot share unmasked customer names, VPAs, or phone numbers. StreamShield uses salted HMAC-SHA256 blinded cryptographic tokens. A consortium gossip protocol shares only `(TokenHash, Timestamp, VelocityCounter)` across participating banks. If an account receives rapid inflows from 5 different banks within 10 minutes, the multi-bank velocity alert triggers a STEP-UP challenge without any bank revealing customer PII."*
@@ -98,11 +98,11 @@ Open **`http://localhost:8080`** on your browser and guide the judges through th
 | :--- | :--- | :--- |
 | **p99 Decision Latency** | $\le 150\text{ ms}$ | **0.48 ms (481 µs)** · **311x faster** |
 | **Throughput Capacity** | $\ge 2,000\text{ TPS}$ | **1,999.0 TPS sustained** |
-| **PR-AUC (Extreme Imbalance)** | Beat Heuristic Rules (0.5429) | **0.8966 (+65% improvement)** |
+| **PR-AUC (Extreme Imbalance)** | Beat Heuristic Rules (0.5429) | **0.6076** |
 | **Recall @ 1% FPR** | Beat Heuristic Rules (80.0%) | **98.33% fraud caught** |
 | **Mule Ring Detection** | Uncover planted clusters | **5 of 5 rings caught (100.0%) in 98s** |
 | **Direct Fraud Intercepted** | Positive ROI | **₹22,26,133.58 (₹22.26 Lakhs)** |
 | **Scale Tested** | Production Grade | **1,201,103 payments across 35,000 accounts** |
-| **Adversarial Drift Recovery** | No full retrain | **0.8402 PR-AUC in 0.42s online recalibration** |
+| **Adversarial Drift Recovery** | No full retrain | **0.2144 PR-AUC in 1.17s online recalibration** |
 | **Privacy Compliance** | DPDP Act compliant | **Blinded token exchange (HMAC-SHA256)** |
 

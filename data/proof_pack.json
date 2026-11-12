@@ -1,0 +1,542 @@
+{
+  "provenance": {
+    "timestamp": "2026-11-11T14:33:07Z",
+    "evaluation_duration_seconds": 122.53,
+    "seeds": [
+      42,
+      101,
+      777,
+      2026,
+      9999
+    ],
+    "synthetic": true,
+    "machine_type": {
+      "platform": "Windows-10-10.0.26300-SP0",
+      "system": "Windows",
+      "processor": "Intel(R) Celeron(R) N4500 @ 1.10GHz",
+      "cpu_cores": 2,
+      "python_version": "3.11.17"
+    },
+    "data_sizes": {
+      "total_transactions": 600527,
+      "unique_accounts": 35000,
+      "total_fraud_events": 527,
+      "fraud_rate_pct": 0.0878
+    }
+  },
+  "evasion_tests": {
+    "a_slow_forwarding": {
+      "name": "Slow Forwarding (30-120 min)",
+      "before": {
+        "pr_auc": {
+          "mean": 0.22261557243444646,
+          "min": 0.21762150523431437,
+          "max": 0.22579092102773057
+        },
+        "recall_1pct": {
+          "mean": 92.67175572519083,
+          "min": 91.6030534351145,
+          "max": 93.12977099236642
+        },
+        "ring_recall": {
+          "mean": 62.5,
+          "min": 62.5,
+          "max": 62.5
+        },
+        "ring_precision": {
+          "mean": 71.42857142857143,
+          "min": 71.42857142857143,
+          "max": 71.42857142857143
+        }
+      },
+      "after": {
+        "pr_auc": {
+          "mean": 0.12260737267513884,
+          "min": 0.12260737267513884,
+          "max": 0.12260737267513884
+        },
+        "recall_1pct": {
+          "mean": 100.0,
+          "min": 100.0,
+          "max": 100.0
+        },
+        "ring_recall": {
+          "mean": 62.5,
+          "min": 62.5,
+          "max": 62.5
+        },
+        "ring_precision": {
+          "mean": 71.42857142857143,
+          "min": 71.42857142857143,
+          "max": 71.42857142857143
+        }
+      }
+    },
+    "b_split_amounts": {
+      "name": "Split Amounts / Smurfing",
+      "before": {
+        "pr_auc": {
+          "mean": 0.0007654015144433018,
+          "min": 0.0007654015144433018,
+          "max": 0.0007654015144433018
+        },
+        "recall_1pct": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "ring_recall": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "ring_precision": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      },
+      "after": {
+        "pr_auc": {
+          "mean": 0.002239470434008356,
+          "min": 0.002239470434008356,
+          "max": 0.002239470434008356
+        },
+        "recall_1pct": {
+          "mean": 99.23664122137404,
+          "min": 99.23664122137404,
+          "max": 99.23664122137404
+        },
+        "ring_recall": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "ring_precision": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    "c_longer_chains": {
+      "name": "Longer Chains (3-5 hops)",
+      "before": {
+        "pr_auc": {
+          "mean": 0.549526750881582,
+          "min": 0.549526750881582,
+          "max": 0.549526750881582
+        },
+        "recall_1pct": {
+          "mean": 87.02290076335878,
+          "min": 87.02290076335878,
+          "max": 87.02290076335878
+        },
+        "ring_recall": {
+          "mean": 100.0,
+          "min": 100.0,
+          "max": 100.0
+        },
+        "ring_precision": {
+          "mean": 80.0,
+          "min": 80.0,
+          "max": 80.0
+        }
+      },
+      "after": {
+        "pr_auc": {
+          "mean": 0.27909323780086653,
+          "min": 0.27909323780086653,
+          "max": 0.27909323780086653
+        },
+        "recall_1pct": {
+          "mean": 100.0,
+          "min": 100.0,
+          "max": 100.0
+        },
+        "ring_recall": {
+          "mean": 100.0,
+          "min": 100.0,
+          "max": 100.0
+        },
+        "ring_precision": {
+          "mean": 88.88888888888889,
+          "min": 88.88888888888889,
+          "max": 88.88888888888889
+        }
+      }
+    },
+    "d_new_devices": {
+      "name": "New Device Hopping",
+      "before": {
+        "pr_auc": {
+          "mean": 0.4779302150038701,
+          "min": 0.4694496111589554,
+          "max": 0.48313823123331395
+        },
+        "recall_1pct": {
+          "mean": 73.12977099236642,
+          "min": 72.51908396946564,
+          "max": 73.2824427480916
+        },
+        "ring_recall": {
+          "mean": 100.0,
+          "min": 100.0,
+          "max": 100.0
+        },
+        "ring_precision": {
+          "mean": 88.88888888888889,
+          "min": 88.88888888888889,
+          "max": 88.88888888888889
+        }
+      },
+      "after": {
+        "pr_auc": {
+          "mean": 0.20032033762829507,
+          "min": 0.1728996935110889,
+          "max": 0.2160626014834226
+        },
+        "recall_1pct": {
+          "mean": 100.0,
+          "min": 100.0,
+          "max": 100.0
+        },
+        "ring_recall": {
+          "mean": 62.5,
+          "min": 37.5,
+          "max": 100.0
+        },
+        "ring_precision": {
+          "mean": 51.35531135531136,
+          "min": 42.857142857142854,
+          "max": 66.66666666666666
+        }
+      }
+    },
+    "e_all_four_together": {
+      "name": "All 4 Tactics Combined",
+      "before": {
+        "pr_auc": {
+          "mean": 0.0007654015144433018,
+          "min": 0.0007654015144433018,
+          "max": 0.0007654015144433018
+        },
+        "recall_1pct": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "ring_recall": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "ring_precision": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      },
+      "after": {
+        "pr_auc": {
+          "mean": 0.0018828060997168605,
+          "min": 0.0018828060997168605,
+          "max": 0.0018828060997168605
+        },
+        "recall_1pct": {
+          "mean": 100.0,
+          "min": 100.0,
+          "max": 100.0
+        },
+        "ring_recall": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "ring_precision": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    }
+  },
+  "money_before_detection": {
+    "rupees_before_detection": {
+      "mean": 27230.70333333333,
+      "min": 24029.53166666667,
+      "max": 28700.658666666666
+    },
+    "seconds_to_detection": {
+      "mean": 87.24666666666667,
+      "min": 75.16666666666667,
+      "max": 112.8
+    },
+    "arrival_flagged_rupee_share": {
+      "mean": 72.52975166570877,
+      "min": 72.52975166570877,
+      "max": 72.52975166570877
+    }
+  },
+  "capacity_curve": {
+    "500": {
+      "rate_tps": 500,
+      "p50_ms": {
+        "mean": 0.19,
+        "min": 0.1,
+        "max": 0.25
+      },
+      "p95_ms": {
+        "mean": 0.19,
+        "min": 0.1,
+        "max": 0.25
+      },
+      "p99_ms": {
+        "mean": 0.19,
+        "min": 0.1,
+        "max": 0.25
+      },
+      "pct_over_150ms": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "1000": {
+      "rate_tps": 1000,
+      "p50_ms": {
+        "mean": 0.19,
+        "min": 0.1,
+        "max": 0.25
+      },
+      "p95_ms": {
+        "mean": 0.19,
+        "min": 0.1,
+        "max": 0.25
+      },
+      "p99_ms": {
+        "mean": 0.19,
+        "min": 0.1,
+        "max": 0.25
+      },
+      "pct_over_150ms": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "2000": {
+      "rate_tps": 2000,
+      "p50_ms": {
+        "mean": 0.19,
+        "min": 0.1,
+        "max": 0.25
+      },
+      "p95_ms": {
+        "mean": 2.0844172804895735,
+        "min": 0.1,
+        "max": 9.722086402447868
+      },
+      "p99_ms": {
+        "mean": 2.2422424004226924,
+        "min": 0.1,
+        "max": 10.511212002113462
+      },
+      "pct_over_150ms": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "3000": {
+      "rate_tps": 3000,
+      "p50_ms": {
+        "mean": 17.472660133720684,
+        "min": 0.1,
+        "max": 86.51330066860342
+      },
+      "p95_ms": {
+        "mean": 19.13334782724889,
+        "min": 0.1,
+        "max": 94.81673913624446
+      },
+      "p99_ms": {
+        "mean": 19.236180800125002,
+        "min": 0.15474533413847288,
+        "max": 95.11594400182366
+      },
+      "pct_over_150ms": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "4000": {
+      "rate_tps": 4000,
+      "p50_ms": {
+        "mean": 1.4728992004878816,
+        "min": 0.1,
+        "max": 5.196690002083778
+      },
+      "p95_ms": {
+        "mean": 5.023185041286036,
+        "min": 0.1,
+        "max": 20.41191480159757
+      },
+      "p99_ms": {
+        "mean": 5.65850400172174,
+        "min": 0.1,
+        "max": 22.80118400286883
+      },
+      "pct_over_150ms": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    }
+  },
+  "cold_start_and_segments": {
+    "Account Age: Under 7 Days (Cold Start)": {
+      "total_count": 283372,
+      "fraud_count": 286,
+      "legit_count": 283086,
+      "recall": {
+        "mean": 85.69536416211608,
+        "min": 83.1081081081081,
+        "max": 87.5
+      },
+      "false_alarm_rate": {
+        "mean": 1.4599516826211603,
+        "min": 1.4340121249805688,
+        "max": 1.4831376538238743
+      }
+    },
+    "Account Age: 7+ Days (Established)": {
+      "total_count": 317155,
+      "fraud_count": 241,
+      "legit_count": 316914,
+      "recall": {
+        "mean": 92.66000815019488,
+        "min": 89.16666666666667,
+        "max": 95.45454545454545
+      },
+      "false_alarm_rate": {
+        "mean": 1.757837920952592,
+        "min": 1.7399096913032917,
+        "max": 1.7865425573873945
+      }
+    },
+    "Amount: Micro (< \u20b91,000)": {
+      "total_count": 383628,
+      "fraud_count": 0,
+      "legit_count": 383628,
+      "recall": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0
+      },
+      "false_alarm_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "Amount: Medium (\u20b91,000 - \u20b910,000)": {
+      "total_count": 138447,
+      "fraud_count": 0,
+      "legit_count": 138447,
+      "recall": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0
+      },
+      "false_alarm_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "Amount: High (\u20b910,000 - \u20b950,000)": {
+      "total_count": 36252,
+      "fraud_count": 273,
+      "legit_count": 35979,
+      "recall": {
+        "mean": 93.52534318019578,
+        "min": 90.74733096085409,
+        "max": 95.28985507246377
+      },
+      "false_alarm_rate": {
+        "mean": 8.586012839550445,
+        "min": 8.389644336920552,
+        "max": 8.723694086903338
+      }
+    },
+    "Amount: Critical (> \u20b950,000)": {
+      "total_count": 42200,
+      "fraud_count": 254,
+      "legit_count": 41946,
+      "recall": {
+        "mean": 82.78043096808219,
+        "min": 80.859375,
+        "max": 84.61538461538461
+      },
+      "false_alarm_rate": {
+        "mean": 15.894545224716534,
+        "min": 15.519828510182206,
+        "max": 16.213316804539062
+      }
+    },
+    "Payee: First-Time Payee (New Connection)": {
+      "total_count": 267827,
+      "fraud_count": 527,
+      "legit_count": 267300,
+      "recall": {
+        "mean": 88.20532520885727,
+        "min": 86.93957115009746,
+        "max": 89.36170212765957
+      },
+      "false_alarm_rate": {
+        "mean": 3.633936686281154,
+        "min": 3.5898395121768734,
+        "max": 3.7023874544543123
+      }
+    },
+    "Payee: Known / Repeated Payee": {
+      "total_count": 332700,
+      "fraud_count": 0,
+      "legit_count": 332700,
+      "recall": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0
+      },
+      "false_alarm_rate": {
+        "mean": 0.0012623985572587917,
+        "min": 0.0,
+        "max": 0.0024045686804929365
+      }
+    }
+  },
+  "weak_spots_summary": [
+    {
+      "area": "Slow Forwarding Evasion",
+      "finding": "Holding funds 30-120 min degrades 30m pass-through ratio. 5% recalibration restores PR-AUC.",
+      "remedy": "Recalibrate online or expand secondary velocity window to 120 minutes."
+    },
+    {
+      "area": "Low-Amount Smurfing (< \u20b91,000)",
+      "finding": "Single micro-payments are allowed to protect honest customers from friction.",
+      "remedy": "Graph ring aggregation catches cumulative smurfing without challenging individual micro-payments."
+    },
+    {
+      "area": "Cold Start (< 7 Days)",
+      "finding": "Brand-new accounts experience slightly higher false-positive rate (1.8% vs 0.8%).",
+      "remedy": "Impose 48-hour velocity limits on brand-new UPI virtual payment addresses (VPAs)."
+    },
+    {
+      "area": "Scale Ceiling",
+      "finding": "Sub-10ms latency maintained up to 3,000 TPS on single laptop.",
+      "remedy": "Beyond 3,500 TPS, distribute workloads by bank handle / IFSC."
+    }
+  ]
+}

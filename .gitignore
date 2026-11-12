@@ -20,3 +20,10 @@ Thumbs.db
 .idea/
 .vscode/
 
+ 
+# Backups and scratch
+*.bak
+*.bak_*
+*.bak.*
+scratch/
+

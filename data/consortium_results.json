@@ -1,0 +1,226 @@
+{
+  "provenance": {
+    "seeds": [
+      42,
+      101,
+      777,
+      2026,
+      9999
+    ],
+    "bank_split": 0.5,
+    "default_cross_bank_ring_share": 0.5,
+    "default_sync_delay_seconds": 30.0,
+    "synthetic": true,
+    "machine_type": {
+      "system": "Windows",
+      "platform": "Windows-10-10.0.26300-SP0",
+      "machine": "AMD64",
+      "python_version": "3.11.17"
+    },
+    "timestamp": "2026-11-12T08:56:01Z"
+  },
+  "modes": {
+    "isolated": {
+      "ring_recall": {
+        "mean": 87.5,
+        "min": 75.0,
+        "max": 100.0
+      },
+      "precision": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0
+      },
+      "seconds_to_detection": {
+        "mean": 145.36,
+        "min": 84.35,
+        "max": 210.05
+      },
+      "share_fraud_rupees_flagged": {
+        "mean": 44.05,
+        "min": 39.44,
+        "max": 50.47
+      },
+      "scam_rupees_stopped": {
+        "mean": 14536.42,
+        "min": 0.0,
+        "max": 72682.11
+      },
+      "false_alarm_rate": {
+        "mean": 0.02,
+        "min": 0.0,
+        "max": 0.03
+      }
+    },
+    "shared_flags": {
+      "ring_recall": {
+        "mean": 95.0,
+        "min": 87.5,
+        "max": 100.0
+      },
+      "precision": {
+        "mean": 97.5,
+        "min": 87.5,
+        "max": 100.0
+      },
+      "seconds_to_detection": {
+        "mean": 142.98,
+        "min": 84.35,
+        "max": 225.0
+      },
+      "share_fraud_rupees_flagged": {
+        "mean": 46.47,
+        "min": 41.0,
+        "max": 53.8
+      },
+      "scam_rupees_stopped": {
+        "mean": 14536.42,
+        "min": 0.0,
+        "max": 72682.11
+      },
+      "false_alarm_rate": {
+        "mean": 0.31,
+        "min": 0.03,
+        "max": 0.43
+      }
+    },
+    "shared_counts": {
+      "ring_recall": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0
+      },
+      "precision": {
+        "mean": 74.1,
+        "min": 70.0,
+        "max": 80.0
+      },
+      "seconds_to_detection": {
+        "mean": 144.45,
+        "min": 106.43,
+        "max": 212.48
+      },
+      "share_fraud_rupees_flagged": {
+        "mean": 55.27,
+        "min": 50.95,
+        "max": 61.01
+      },
+      "scam_rupees_stopped": {
+        "mean": 355592.06,
+        "min": 200473.31,
+        "max": 623244.8
+      },
+      "false_alarm_rate": {
+        "mean": 0.51,
+        "min": 0.27,
+        "max": 0.77
+      }
+    },
+    "centralised": {
+      "ring_recall": {
+        "mean": 97.5,
+        "min": 87.5,
+        "max": 100.0
+      },
+      "precision": {
+        "mean": 95.0,
+        "min": 87.5,
+        "max": 100.0
+      },
+      "seconds_to_detection": {
+        "mean": 125.0,
+        "min": 84.35,
+        "max": 155.4
+      },
+      "share_fraud_rupees_flagged": {
+        "mean": 47.57,
+        "min": 43.6,
+        "max": 53.07
+      },
+      "scam_rupees_stopped": {
+        "mean": 52433.68,
+        "min": 0.0,
+        "max": 145335.6
+      },
+      "false_alarm_rate": {
+        "mean": 0.02,
+        "min": 0.0,
+        "max": 0.03
+      }
+    }
+  },
+  "sweeps": {
+    "cross_bank_ring_share": {
+      "0.0": {
+        "isolated": 95.8,
+        "shared_flags": 100.0,
+        "shared_counts": 100.0,
+        "centralised": 95.8
+      },
+      "0.25": {
+        "isolated": 87.5,
+        "shared_flags": 91.7,
+        "shared_counts": 100.0,
+        "centralised": 95.8
+      },
+      "0.5": {
+        "isolated": 83.3,
+        "shared_flags": 91.7,
+        "shared_counts": 100.0,
+        "centralised": 95.8
+      },
+      "0.75": {
+        "isolated": 87.5,
+        "shared_flags": 95.8,
+        "shared_counts": 100.0,
+        "centralised": 100.0
+      },
+      "1.0": {
+        "isolated": 79.2,
+        "shared_flags": 95.8,
+        "shared_counts": 100.0,
+        "centralised": 100.0
+      }
+    },
+    "sync_delay": {
+      "0s": {
+        "shared_flags_recall": 91.7,
+        "shared_counts_recall": 100.0,
+        "scam_rupees_stopped": 283764.96
+      },
+      "30s": {
+        "shared_flags_recall": 91.7,
+        "shared_counts_recall": 100.0,
+        "scam_rupees_stopped": 283764.96
+      },
+      "60s": {
+        "shared_flags_recall": 91.7,
+        "shared_counts_recall": 100.0,
+        "scam_rupees_stopped": 283764.96
+      },
+      "300s": {
+        "shared_flags_recall": 87.5,
+        "shared_counts_recall": 100.0,
+        "scam_rupees_stopped": 283764.96
+      }
+    }
+  },
+  "privacy_checks": {
+    "check_a": {
+      "status": "PASS",
+      "zero_pii_verified": true
+    },
+    "check_b": {
+      "status": "PASS",
+      "tokens_tested": 50,
+      "matched_with_key": 50,
+      "time_with_key_ms": 89.1,
+      "matched_without_key": 0,
+      "time_without_key_ms": 28.53
+    },
+    "check_c": {
+      "status": "PASS",
+      "recall_delta_at_zero": 0.0
+    }
+  }
+}

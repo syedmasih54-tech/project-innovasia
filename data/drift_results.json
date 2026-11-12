@@ -1,0 +1,145 @@
+{
+  "provenance": {
+    "synthetic": true,
+    "round": "Round 2 Concept Drift",
+    "total_payments": 600576,
+    "adaptation_sample_size": 30028,
+    "adaptation_fraud_cases": 13,
+    "adaptation_fraud_rate": 0.00043,
+    "evaluation_sample_size": 570548,
+    "evaluation_fraud_cases": 563,
+    "evaluation_fraud_rate": 0.00099,
+    "seeds_tested": [
+      42,
+      101,
+      2024,
+      7,
+      999
+    ]
+  },
+  "cards": {
+    "card1": {
+      "title": "Round 1 Baseline",
+      "pr_auc": 0.6076,
+      "description": "PR-AUC of Round 1 models on Round 1 test period (last 20%)"
+    },
+    "card2": {
+      "title": "Unadapted Round 2",
+      "pr_auc": 0.2418,
+      "recall_1pct": 62.88,
+      "caption": "Performance drops when fraud tactics change",
+      "description": "Evaluated on Round 2 payments after first 5%"
+    },
+    "card3": {
+      "title": "Adapted Round 2 (5% Recalibration)",
+      "pr_auc": 0.2144,
+      "recall_1pct": 54.88,
+      "recalibration_time_sec": 1.17,
+      "caption": "Recalibrated in 1.17s, tested on the other 95%",
+      "note": "Ranking did not improve; see decision-level results."
+    }
+  },
+  "why_card3_lower_explanation": {
+    "order_preserving_check": "Isotonic regression with tie-breaker is strictly monotonic (Spearman rho = 1.0000). PR-AUC cannot improve without changing ranks.",
+    "adjusted_parameters": "Blend weight w shifted from 0.03 to 0.33 based on 5% window, plus isotonic probability curve.",
+    "sample_noise_diagnosis": "The 5% adaptation window contained only 13 fraud cases out of 30,028 transactions (0.043% fraud rate). Overfitting this tiny sample hurt generalisation on the remaining 95%.",
+    "bootstrap_diff_ci": {
+      "mean_diff": -0.0277,
+      "ci_95": [
+        -0.036,
+        -0.0189
+      ]
+    },
+    "five_seeds_pr_auc": {
+      "mean": 0.2207,
+      "min": 0.2113,
+      "max": 0.2414
+    }
+  },
+  "alternative_adaptation_methods": {
+    "refit_blend_weight": {
+      "name": "Refit Blend Weight Only",
+      "pr_auc": 0.2144,
+      "recall_1pct": 54.88,
+      "time_sec": 1.184,
+      "notes": "Optimal blend w=0.33 on 5% window without isotonic binning"
+    },
+    "extra_lgb_trees": {
+      "name": "Add 10 Extra LightGBM Trees (lr=0.005)",
+      "pr_auc": 0.2608,
+      "recall_1pct": 58.61,
+      "time_sec": 2.863,
+      "notes": "Added 10 boosting rounds on first 5% data"
+    },
+    "recency_weighted_trees": {
+      "name": "Recency-Weighted Extra Trees",
+      "pr_auc": 0.2673,
+      "recall_1pct": 58.08,
+      "time_sec": 2.958,
+      "notes": "Exponentially weighted toward end of 5% window"
+    }
+  },
+  "decision_level_metrics": {
+    "before_adaptation": {
+      "flagged_share_pct": 0.2,
+      "false_alarm_rate_pct": 0.16,
+      "recall_at_hold_pct": 34.46,
+      "rupees_prevented": 7694181.83,
+      "friction_incurred": 5306035.9,
+      "net_benefit": 2388145.93,
+      "multiplier": 1.5
+    },
+    "after_adaptation": {
+      "flagged_share_pct": 0.08,
+      "false_alarm_rate_pct": 0.06,
+      "recall_at_hold_pct": 20.78,
+      "rupees_prevented": 2499327.02,
+      "friction_incurred": 1862203.58,
+      "net_benefit": 637123.44,
+      "multiplier": 1.3
+    }
+  },
+  "per_tactic_benchmarks": [
+    {
+      "tactic": "slower_forwarding",
+      "fraud_count": 209,
+      "unadapted_pr_auc": 0.2763,
+      "adapted_pr_auc": 0.256,
+      "unadapted_recall_1pct": 53.59,
+      "adapted_recall_1pct": 47.37,
+      "pr_auc_diff": -0.0203
+    },
+    {
+      "tactic": "scam_high_value",
+      "fraud_count": 207,
+      "unadapted_pr_auc": 0.0381,
+      "adapted_pr_auc": 0.0258,
+      "unadapted_recall_1pct": 73.43,
+      "adapted_recall_1pct": 57.97,
+      "pr_auc_diff": -0.0123
+    },
+    {
+      "tactic": "split_amounts_smurfing",
+      "fraud_count": 123,
+      "unadapted_pr_auc": 0.2585,
+      "adapted_pr_auc": 0.2319,
+      "unadapted_recall_1pct": 56.91,
+      "adapted_recall_1pct": 59.35,
+      "pr_auc_diff": -0.0266
+    },
+    {
+      "tactic": "longer_chains",
+      "fraud_count": 24,
+      "unadapted_pr_auc": 0.0099,
+      "adapted_pr_auc": 0.0063,
+      "unadapted_recall_1pct": 83.33,
+      "adapted_recall_1pct": 70.83,
+      "pr_auc_diff": -0.0036
+    }
+  ],
+  "reference_baselines": {
+    "random_guess_pr_auc": 0.00099,
+    "simple_rules_pr_auc": 0.0164,
+    "simple_rules_recall_1pct": 42.45
+  }
+}

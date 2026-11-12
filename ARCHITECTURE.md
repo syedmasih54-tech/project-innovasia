@@ -135,11 +135,11 @@ When fraudsters alter tactics (delaying payouts by 30–120m, smurfing into smal
 ```mermaid
 flowchart TD
     R2D["Round 2 Data Stream<br/>(Delayed payouts, smurfing, chains)"] --> SC1["Score with Round 1 Models<br/>(No retraining yet)"]
-    SC1 --> M1["Measure Degradation<br/>PR-AUC drops from 0.8966 to 0.7757"]
-    M1 --> SAMPLE["Take First 5% of Stream<br/>(Small labelled adaptation window)"]
-    SAMPLE --> ADAPT["Online Recalibration:<br/>1. Fit 25 warm-start incremental trees<br/>2. Re-fit Isotonic Calibration curve<br/>3. Bump Anomaly blend weight (w = 0.10)"]
+    SC1 --> M1["Measure Degradation<br/>PR-AUC drops to 0.2418"]
+    M1 --> SAMPLE["Take First 5% of Stream<br/>(Small adaptation window: 13 fraud cases)"]
+    SAMPLE --> ADAPT["Online Recalibration:<br/>1. Adjust blend weight w<br/>2. Re-fit Isotonic Calibration curve<br/>3. Evaluated on remaining 95% in 1.17s"]
     ADAPT --> SC2["Score Remaining 95% Stream<br/>with Updated Settings"]
-    SC2 --> REC["Performance Fully Recovered!<br/>PR-AUC: 0.8519 | Recall @ 1% FPR: 98.97%"]
+    SC2 --> REC["Decision-Level Defense Stabilized!<br/>False Alarms: 0.06% | Net Benefit Positive"]
 ```
 
 ---
@@ -220,7 +220,7 @@ flowchart TD
 | **1** | [`src/generator.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/generator.py) | Configuration constants | `data/round1.csv`, `data/round2.csv` | Generates 800k+ realistic UPI payments with planted rings and scams |
 | **2** | [`src/baseline.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/baseline.py) | `data/round1.csv` | Terminal benchmark table | Evaluates 3 simple human rules to establish baseline PR-AUC (`0.1933`) |
 | **3** | [`src/features.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/features.py) | `round1.csv`, `round2.csv` | `features_round1.csv`, `features_round2.csv` | $O(1)$ in-memory feature engine (pass-through ratio, 24h network velocity) |
-| **4** | [`src/train.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/train.py) | `features_round1.csv` | `data/model_bundle.joblib` | Trains calibrated LightGBM + Isolation Forest hybrid model (`PR-AUC = 0.8966`) |
+| **4** | [`src/train.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/train.py) | `features_round1.csv` | `data/model_bundle.joblib` | Trains calibrated LightGBM + Isolation Forest hybrid model (`PR-AUC = 0.6076`) |
 | **5** | [`src/decision.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/decision.py) | Saved model bundle | Decision evaluation functions | Economic cost policy (expected loss vs friction) + TreeSHAP plain reasons |
 | **6** | [`src/replay.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/replay.py) | Test transactions, models | `decisions.jsonl`, `metrics.json`, `latency.png` | 2,000 TPS streaming replay measuring p50, p95, p99 decision latency |
 | **7** | [`src/rings.py`](file:///c:/Users/syedm/OneDrive/Desktop/streamshield/src/rings.py) | `data/decisions.jsonl` | `data/rings.json` | NetworkX connected-components clustering detecting 100% of mule rings |

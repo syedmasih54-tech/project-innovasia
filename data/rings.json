@@ -1,6 +1,8 @@
 [
   {
-    "ring_id": "ring_found_03",
+    "ring_id": "ring_found_01",
+    "ring_num": 1,
+    "display_name": "Ring 1",
     "member_accounts": [
       "acc_06238",
       "acc_09978",
@@ -23,7 +25,9 @@
     "matched_true_ring": "ring_26"
   },
   {
-    "ring_id": "ring_found_04",
+    "ring_id": "ring_found_02",
+    "ring_num": 2,
+    "display_name": "Ring 2",
     "member_accounts": [
       "acc_03741",
       "acc_04338",
@@ -45,7 +49,9 @@
     "matched_true_ring": "ring_29"
   },
   {
-    "ring_id": "ring_found_05",
+    "ring_id": "ring_found_03",
+    "ring_num": 3,
+    "display_name": "Ring 3",
     "member_accounts": [
       "acc_08829",
       "acc_10198",
@@ -63,7 +69,9 @@
     "matched_true_ring": "ring_27"
   },
   {
-    "ring_id": "ring_found_01",
+    "ring_id": "ring_found_04",
+    "ring_num": 4,
+    "display_name": "Ring 4",
     "member_accounts": [
       "acc_06516",
       "acc_07901",
@@ -76,7 +84,9 @@
     "matched_true_ring": ""
   },
   {
-    "ring_id": "ring_found_11",
+    "ring_id": "ring_found_05",
+    "ring_num": 5,
+    "display_name": "Ring 5",
     "member_accounts": [
       "acc_02079",
       "acc_07731",
@@ -93,6 +103,8 @@
   },
   {
     "ring_id": "ring_found_06",
+    "ring_num": 6,
+    "display_name": "Ring 6",
     "member_accounts": [
       "acc_04279",
       "acc_06094",
@@ -105,7 +117,9 @@
     "matched_true_ring": ""
   },
   {
-    "ring_id": "ring_found_10",
+    "ring_id": "ring_found_07",
+    "ring_num": 7,
+    "display_name": "Ring 7",
     "member_accounts": [
       "acc_07876",
       "acc_20297",
@@ -117,7 +131,9 @@
     "matched_true_ring": ""
   },
   {
-    "ring_id": "ring_found_02",
+    "ring_id": "ring_found_08",
+    "ring_num": 8,
+    "display_name": "Ring 8",
     "member_accounts": [
       "acc_02372",
       "acc_10348",
@@ -129,7 +145,9 @@
     "matched_true_ring": ""
   },
   {
-    "ring_id": "ring_found_08",
+    "ring_id": "ring_found_09",
+    "ring_num": 9,
+    "display_name": "Ring 9",
     "member_accounts": [
       "acc_13559",
       "acc_22356",
@@ -141,7 +159,9 @@
     "matched_true_ring": ""
   },
   {
-    "ring_id": "ring_found_07",
+    "ring_id": "ring_found_10",
+    "ring_num": 10,
+    "display_name": "Ring 10",
     "member_accounts": [
       "acc_13553",
       "acc_22676",
@@ -153,7 +173,9 @@
     "matched_true_ring": ""
   },
   {
-    "ring_id": "ring_found_09",
+    "ring_id": "ring_found_11",
+    "ring_num": 11,
+    "display_name": "Ring 11",
     "member_accounts": [
       "acc_01569",
       "acc_02695",

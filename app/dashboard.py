@@ -398,23 +398,28 @@ def main():
                 "Hybrid Blend (+ Isolation Forest)"
             ],
             "PR-AUC": [
-                f"{metrics.get('pr_auc_rules', 0.5429):.4f}",
-                "0.7950",
-                f"<b>{metrics.get('pr_auc_model', 0.8966):.4f}</b>"
+                f"{metrics.get('pr_auc_rules', 0.5429):.4f}" if isinstance(metrics.get('pr_auc_rules'), (int, float)) else "not measured",
+                "not measured",
+                f"<b>{metrics.get('pr_auc_model', 0.6076):.4f}</b>" if isinstance(metrics.get('pr_auc_model'), (int, float)) else "not measured"
             ],
             "Recall @ 1% False Alarms": [
-                f"{metrics.get('recall_at_1pct_rules', 80.0):.1f}%",
-                "100.0%",
-                f"<b>{metrics.get('recall_at_1pct_model', 98.3):.1f}%</b>"
+                f"{metrics.get('recall_at_1pct_rules', 80.0):.1f}%" if isinstance(metrics.get('recall_at_1pct_rules'), (int, float)) else "not measured",
+                "not measured",
+                f"<b>{metrics.get('recall_at_1pct_model', 98.3):.1f}%</b>" if isinstance(metrics.get('recall_at_1pct_model'), (int, float)) else "not measured"
             ]
         }
         bench_df = pd.DataFrame(bench_data)
         st.write(bench_df.to_html(escape=False, index=False), unsafe_allow_html=True)
         
-        st.info("""
+        pr_m = metrics.get('pr_auc_model', 0.6076)
+        pr_r = metrics.get('pr_auc_rules', 0.5429)
+        rec_m = metrics.get('recall_at_1pct_model', 98.3)
+        gain_str = f" (+{round(((pr_m - pr_r)/pr_r)*100, 1)}% gain)" if (isinstance(pr_m, (int, float)) and isinstance(pr_r, (int, float)) and pr_r > 0) else ""
+
+        st.info(f"""
         **Key Takeaways for Judges:**
-        - **Precision-Recall AUC**: Boosted from **0.5429** to **0.8966** (+65% gain).
-        - **Caught Fraud**: Catches **98.3%** of stolen money while disturbing only **1%** of legitimate customers.
+        - **Precision-Recall AUC**: Model score is **{pr_m}** vs rules **{pr_r}**{gain_str}.
+        - **Caught Fraud**: Catches **{rec_m}%** of stolen money while disturbing only **1%** of legitimate customers.
         - **Explainability**: Powered by TreeSHAP contributions without post-hoc black-box latency.
         """)
 

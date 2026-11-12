@@ -120,6 +120,15 @@ def generate_sample_files():
         json.dump(sample_rings, f, indent=2)
     print(f"  Created {RINGS_PATH} (4 sample rings)")
     
+    drift_file = os.path.join("data", "drift_results.json")
+    pr_m = 0.6076
+    if os.path.exists(drift_file):
+        try:
+            with open(drift_file, "r") as df:
+                pr_m = json.load(df).get("cards", {}).get("card1", {}).get("pr_auc", 0.6076)
+        except Exception:
+            pass
+
     # 3. Sample Metrics
     sample_metrics = {
         "p50": 0.01,
@@ -128,7 +137,7 @@ def generate_sample_files():
         "max": 65.10,
         "achieved_tps": 3650.0,
         "pr_auc_rules": 0.5429,
-        "pr_auc_model": 0.8966,
+        "pr_auc_model": pr_m,
         "recall_at_1pct_rules": 80.00,
         "recall_at_1pct_model": 98.33,
         "rupees_prevented": 1229346.16,
