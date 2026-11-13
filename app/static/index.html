@@ -417,51 +417,7 @@
     </nav>
 
     <!-- Right: Telemetry Controls & User Avatar -->
-    <div class="flex items-center gap-2.5">
-
-      <!-- Inline Expandable Stream Controls Group (Toggled by the ⚡ Icon) -->
-      <div id="topbar-stream-controls" class="hidden items-center gap-2 transition-all duration-300">
-        <button id="stream-toggle-btn" onclick="toggleStream()"
-          class="px-3.5 py-1.5 rounded-full bg-white hover:bg-[#F2ECE4] border border-[#ECE7E1] text-obsidian font-semibold text-xs shadow-pill-soft spring-hover flex items-center gap-1.5 whitespace-nowrap">
-          <svg id="stream-icon" class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span id="stream-btn-text">Pause Stream</span>
-        </button>
-        <div
-          class="flex items-center bg-white border border-[#ECE7E1] rounded-full px-2.5 py-1 shadow-pill-soft text-xs whitespace-nowrap">
-          <span class="text-slate-400 mr-1.5 font-medium">Speed:</span>
-          <select id="stream-speed"
-            class="bg-transparent font-semibold text-obsidian focus:outline-none cursor-pointer text-xs">
-            <option value="1000">1x (1/s)</option>
-            <option value="200" selected>5x (5/s)</option>
-            <option value="50">20x Fast</option>
-          </select>
-        </div>
-        <button onclick="runFastReplay()"
-          class="px-3.5 py-1.5 rounded-full bg-obsidian hover:bg-slate-800 text-white font-semibold text-xs shadow-pill-soft spring-hover flex items-center gap-1.5 whitespace-nowrap">
-          <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd"
-              d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
-              clip-rule="evenodd" />
-          </svg>
-          Stress Test (2,000 TPS)
-        </button>
-      </div>
-
-      <!-- Single Top Bar Toggle Icon Button -->
-      <button id="stream-controls-toggle-btn" onclick="toggleStreamControlsBar()" title="Toggle Stream & Stress Controls"
-        class="w-10 h-10 rounded-full bg-white border border-[#ECE7E1] hover:bg-[#F2ECE4] text-obsidian flex items-center justify-center shadow-card-soft transition relative">
-        <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd"
-            d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
-            clip-rule="evenodd" />
-        </svg>
-        <span class="w-2 h-2 rounded-full bg-emerald-500 absolute top-2 right-2 animate-pulse"></span>
-      </button>
-
+    <div class="flex items-center gap-3">
       <button onclick="fetchFreshData()" title="Sync Engine State"
         class="w-10 h-10 rounded-full bg-white border border-[#ECE7E1] hover:bg-[#F2ECE4] text-obsidian flex items-center justify-center shadow-card-soft transition">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -505,6 +461,38 @@
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           Real-Time Fraud & Mule Ring Command Center
         </p>
+      </div>
+
+      <!-- Quick Action Pills -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button id="stream-toggle-btn" onclick="toggleStream()"
+          class="px-5 py-2.5 rounded-full bg-white hover:bg-[#F2ECE4] border border-[#ECE7E1] text-obsidian font-semibold text-xs shadow-pill-soft spring-hover flex items-center gap-2">
+          <svg id="stream-icon" class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span id="stream-btn-text">Pause Stream</span>
+        </button>
+        <div
+          class="flex items-center bg-white border border-[#ECE7E1] rounded-full px-3 py-1.5 shadow-pill-soft text-xs">
+          <span class="text-slate-400 mr-2 font-medium">Speed:</span>
+          <select id="stream-speed"
+            class="bg-transparent font-semibold text-obsidian focus:outline-none cursor-pointer">
+            <option value="1000">1x (1/s)</option>
+            <option value="200" selected>5x (5/s)</option>
+            <option value="50">20x Fast</option>
+          </select>
+        </div>
+        <button onclick="runFastReplay()"
+          class="px-5 py-2.5 rounded-full bg-obsidian hover:bg-slate-800 text-white font-semibold text-xs shadow-pill-soft spring-hover flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+              clip-rule="evenodd" />
+          </svg>
+          Stress Test (2,000 TPS)
+        </button>
       </div>
     </div>
 
@@ -3187,21 +3175,6 @@
     }
 
     // Stream Loop Controls
-    function toggleStreamControlsBar() {
-      const drawer = document.getElementById('topbar-stream-controls');
-      const btn = document.getElementById('stream-controls-toggle-btn');
-      if (!drawer) return;
-      if (drawer.classList.contains('hidden')) {
-        drawer.classList.remove('hidden');
-        drawer.classList.add('flex');
-        if (btn) btn.classList.add('bg-[#EFEAE2]', 'border-amber-400');
-      } else {
-        drawer.classList.add('hidden');
-        drawer.classList.remove('flex');
-        if (btn) btn.classList.remove('bg-[#EFEAE2]', 'border-amber-400');
-      }
-    }
-
     function toggleStream() {
       isStreaming = !isStreaming;
       const btn = document.getElementById('stream-btn-text');
