@@ -231,6 +231,7 @@
   </style>
   <!-- Cytoscape.js for Interactive Network Graph Topology -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+  <script src="/scroll-motion.js" defer></script>
 </head>
 
 <body class="min-h-screen flex flex-col antialiased">
@@ -831,63 +832,162 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
           <!-- LEFT: OFFICER INVESTIGATION VIEW (CONFIDENTIAL) (7 COLS) -->
-          <div class="lg:col-span-7 space-y-5">
+          <div class="lg:col-span-7 space-y-4">
 
+            <!-- Panel Header (Title & Fraud Risk Badge Preserved) -->
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span class="text-amber-600">🛡️</span>
-                <span class="text-[11px] font-bold text-obsidian uppercase tracking-wider">OFFICER INVESTIGATION VIEW
-                  (CONFIDENTIAL)</span>
+                <span class="text-[11px] font-bold text-obsidian uppercase tracking-wider">OFFICER INVESTIGATION VIEW (CONFIDENTIAL)</span>
               </div>
-              <span class="text-xs font-bold font-mono text-rose-700" id="inspect-score">Fraud Risk: 0.3%</span>
+              <span class="text-xs font-bold font-mono text-rose-700" id="inspect-score">Fraud Risk: 87.4%</span>
             </div>
 
-            <!-- Observed Behavioral Facts (TreeSHAP) -->
-            <div class="p-5 rounded-2xl bg-white border border-[#ECE7E1] shadow-xs space-y-3">
+            <!-- 1. CASE HEADER CARD -->
+            <div class="p-5 rounded-2xl bg-white border border-[#ECE7E1] shadow-card-soft space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#ECE7E1] pb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-mono font-black text-obsidian bg-porcelain px-2.5 py-1 rounded-lg border border-[#ECE7E1]" id="case-id-display">CASE-2026-04817</span>
+                  <span class="text-[10px] text-[#8C847A] font-mono" id="case-timestamp-display">13 Nov 2026, 14:48:12 IST</span>
+                </div>
+                <!-- Status Pill -->
+                <div id="case-status-pill" class="px-3 py-1 rounded-full text-xs font-bold font-sans flex items-center gap-1.5 bg-amber-100 text-amber-800 border border-amber-200">
+                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse" id="case-status-dot"></span>
+                  <span id="case-status-text">Pending Review</span>
+                </div>
+              </div>
+
+              <!-- Case Details Grid -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-0.5">
+                <div class="bg-porcelain p-2.5 rounded-xl border border-[#ECE7E1]">
+                  <span class="text-[10px] text-[#8C847A] uppercase font-bold block">Account</span>
+                  <span class="font-mono font-bold text-obsidian text-xs" id="case-account-display">acc_12631</span>
+                </div>
+                <div class="bg-porcelain p-2.5 rounded-xl border border-[#ECE7E1]">
+                  <span class="text-[10px] text-[#8C847A] uppercase font-bold block">Amount</span>
+                  <span class="font-mono font-bold text-obsidian text-xs" id="case-amount-display">₹93.54</span>
+                </div>
+                <div class="bg-porcelain p-2.5 rounded-xl border border-[#ECE7E1]">
+                  <span class="text-[10px] text-[#8C847A] uppercase font-bold block">Risk Score</span>
+                  <span class="font-mono font-bold text-rose-700 text-xs" id="case-risk-level">87.4% (Critical)</span>
+                </div>
+                <div class="bg-porcelain p-2.5 rounded-xl border border-[#ECE7E1]">
+                  <span class="text-[10px] text-[#8C847A] uppercase font-bold block">Pre-Settlement Rule</span>
+                  <span class="font-mono font-bold text-obsidian text-xs" id="case-gate-rule">HOLD (Blocked)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2 & 3. CUSTOMER SUBMISSION & SYNTHETIC DOCUMENTS CARD -->
+            <div class="p-5 rounded-2xl bg-white border border-[#ECE7E1] shadow-card-soft space-y-4">
+              <div class="flex items-center justify-between border-b border-[#ECE7E1] pb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">📁</span>
+                  <h4 class="text-xs font-bold text-obsidian uppercase tracking-wider">Customer Submission & Proofs</h4>
+                </div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-bold">
+                  Synthetic Demo Data
+                </span>
+              </div>
+
+              <!-- Reason Given by Customer -->
+              <div class="bg-porcelain p-3.5 rounded-xl border border-[#ECE7E1] space-y-1">
+                <span class="text-[10px] uppercase font-bold text-[#8C847A] tracking-wider block">Customer's Stated Reason</span>
+                <p class="text-xs font-semibold text-obsidian italic flex items-center gap-1" id="officer-customer-reason-text">
+                  <span class="text-slate-400 not-italic">“</span>
+                  <span id="officer-reason-content">Paying my landlord's monthly maintenance share</span>
+                  <span class="text-slate-400 not-italic">”</span>
+                </p>
+              </div>
+
+              <!-- Uploaded Documents List (Numbered in Order) -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-[10px] font-bold uppercase text-[#8C847A] px-1">
+                  <span>Uploaded Documents (<span id="officer-doc-count">5</span>)</span>
+                  <span>Sequential Audit Order</span>
+                </div>
+
+                <div id="officer-docs-list" class="space-y-2 max-h-[240px] overflow-y-auto pr-1 scrollbar-thin">
+                  <!-- Populated dynamically via renderOfficerDocs() -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. OFFICER NOTES -->
+            <div class="p-5 rounded-2xl bg-white border border-[#ECE7E1] shadow-card-soft space-y-2.5">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#8C847A]">OBSERVED BEHAVIORAL
-                  FACTS (TREESHAP)</span>
-                <span
-                  class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Pre-Settlement
-                  Proof</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">✍️</span>
+                  <label for="officer-notes-input" class="text-xs font-bold text-obsidian uppercase tracking-wider">Officer Internal Notes</label>
+                </div>
+                <span class="text-[10px] text-[#8C847A] font-mono">Confidential Log</span>
               </div>
-              <ul id="detail-officer-reasons" class="space-y-2 text-xs text-obsidian">
-                <li class="flex items-start gap-2">
-                  <span class="text-rose-500 font-bold mt-0.5">•</span>
-                  <span>Normal baseline behavioral patterns observed across all feature dimensions.</span>
-                </li>
-              </ul>
+              <textarea id="officer-notes-input" rows="2" placeholder="Record internal remarks, behavioral explanations, identity corroboration, or branch verification rationale..."
+                class="w-full bg-porcelain border border-[#ECE7E1] rounded-xl p-3 text-xs text-obsidian placeholder-[#8C847A] focus:outline-none focus:ring-1 focus:ring-obsidian font-sans"></textarea>
             </div>
 
-            <!-- Counterfactual Recourse Box (Officers Only) -->
-            <div class="p-5 rounded-2xl bg-amber-50/60 border border-amber-200/80 shadow-xs space-y-2">
-              <div class="flex items-center gap-2">
-                <span class="text-amber-600">⚡</span>
-                <span class="text-xs font-bold text-amber-900">What Would Change This Decision? (Officers Only)</span>
+            <!-- 5. DECISION ACTIONS & AUDIT TIMELINE -->
+            <div class="p-5 rounded-2xl bg-white border border-[#ECE7E1] shadow-card-soft space-y-4">
+              <div class="flex items-center justify-between border-b border-[#ECE7E1] pb-2.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">⚖️</span>
+                  <h4 class="text-xs font-bold text-obsidian uppercase tracking-wider">Decision Actions</h4>
+                </div>
+                <span class="text-[10px] text-[#8C847A]">Real-Time Sync to Customer UPI Screen</span>
               </div>
-              <p class="text-xs text-amber-950 font-mono font-semibold" id="detail-counterfactual">
-                Payment is already allowed under baseline safety policy.
-              </p>
-              <p class="text-[11px] text-amber-700/90 leading-relaxed">
-                Smallest single feature change that flips the cost-utility equation to ALLOW.
-              </p>
-            </div>
 
-            <!-- Tamper-Evident SHA-256 Provenance Log -->
-            <div
-              class="p-4 rounded-2xl bg-[#FAF8F5] border border-[#ECE7E1] font-mono text-[11px] text-[#6B6661] space-y-1.5">
-              <div class="flex items-center justify-between text-[#8C847A] pb-1 border-b border-[#ECE7E1]">
-                <span class="uppercase tracking-wider text-[10px] font-bold">Cryptographic Block Provenance</span>
-                <span class="text-[10px] text-emerald-700 font-bold">SHA-256 Chained</span>
+              <!-- Decision Buttons Grid -->
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                <button onclick="handleOfficerDecision('ALLOW')" id="btn-action-allow"
+                  class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                  <span>Allow Payment</span>
+                </button>
+                <button onclick="handleOfficerDecision('HOLD')" id="btn-action-hold"
+                  class="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span>Put On Hold</span>
+                </button>
+                <button onclick="handleOfficerDecision('VISIT_BRANCH')" id="btn-action-branch"
+                  class="py-2.5 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  <span>Visit Branch</span>
+                </button>
+                <button onclick="handleOfficerDecision('REJECT')" id="btn-action-reject"
+                  class="py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  <span>Reject / Flag</span>
+                </button>
+                <button onclick="toggleRequestDocInput()" id="btn-action-request-doc"
+                  class="py-2.5 px-3 rounded-xl bg-obsidian hover:bg-black text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 col-span-2 sm:col-span-2">
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  <span>Request More Documents</span>
+                </button>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-[#8C847A] w-20 shrink-0">Prev Hash:</span>
-                <span id="detail-prev-hash" class="truncate text-obsidian select-all">0000000000000000...</span>
+
+              <!-- Inline Input Box for Request More Documents -->
+              <div id="request-doc-box" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-200 space-y-2">
+                <span class="text-[10px] font-bold text-amber-900 uppercase">Specify Required Document for Customer:</span>
+                <div class="flex gap-2">
+                  <input type="text" id="request-doc-input" placeholder="e.g. Registered Rental Agreement, Latest Salary Slip, Cancelled Cheque..."
+                    class="flex-1 bg-white border border-amber-300 rounded-lg px-3 py-1.5 text-xs text-obsidian focus:outline-none focus:ring-1 focus:ring-amber-500">
+                  <button onclick="submitRequestDoc()" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs whitespace-nowrap">
+                    Send to Customer
+                  </button>
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-[#8C847A] w-20 shrink-0">Block Hash:</span>
-                <span id="detail-block-hash" class="truncate text-obsidian select-all">bd41edd24915b0cd...</span>
+
+              <!-- Chronological Audit Timeline -->
+              <div class="pt-3 border-t border-[#ECE7E1]">
+                <div class="flex items-center justify-between text-xs mb-2">
+                  <span class="text-[10px] uppercase font-bold text-[#8C847A] tracking-wider">Audit Timeline (Actions & Notes)</span>
+                  <span class="text-[10px] text-emerald-700 font-mono font-bold" id="audit-trail-count">2 Entries</span>
+                </div>
+                <div id="case-audit-timeline" class="space-y-1.5 max-h-36 overflow-y-auto text-xs font-mono text-slate-700 pr-1 scrollbar-thin">
+                  <!-- Rendered dynamically via renderAuditTimeline() -->
+                </div>
               </div>
+
             </div>
 
           </div>
@@ -910,7 +1010,7 @@
 
               <!-- Screen Outer -->
               <div
-                class="bg-[#F8FDFC] rounded-[36px] p-5 text-center flex flex-col justify-between min-h-[470px] overflow-hidden relative">
+                class="bg-[#F8FDFC] rounded-[36px] p-5 text-center flex flex-col justify-between min-h-[500px] max-h-[640px] overflow-y-auto scrollbar-thin relative">
 
                 <!-- Phone Status Bar -->
                 <div class="flex items-center justify-between text-[11px] font-bold text-[#1C1917] px-1 pt-0.5">
@@ -936,21 +1036,90 @@
                   <div class="text-3xl font-black text-obsidian tracking-tight mt-1" id="phone-amount">₹93.54</div>
                 </div>
 
-                <!-- Customer Safe Notification Box (Never leaks thresholds or model facts) -->
-                <div id="phone-message-box"
-                  class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-semibold leading-relaxed my-2 shadow-xs text-center">
-                  <span id="phone-customer-msg">Payment processed successfully.</span>
-                </div>
+                <!-- CUSTOMER VERIFICATION & RECOURSE SECTION -->
+                <div id="customer-phone-view-container" class="my-2 space-y-3 text-left">
 
-                <!-- Primary Action Button -->
-                <div class="mt-2 space-y-2">
-                  <button id="phone-action-btn"
-                    class="w-full py-2.5 rounded-full bg-emerald-600 text-white font-bold text-xs shadow-sm hover:bg-emerald-700 transition">
-                    View UPI Receipt
-                  </button>
-                  <button class="text-[11px] text-[#8C847A] hover:text-obsidian font-medium transition block mx-auto">
-                    Cancel Payment
-                  </button>
+                  <!-- Live Status Message Banner -->
+                  <div id="phone-status-banner"
+                    class="p-2.5 rounded-2xl bg-amber-50 border border-amber-200 text-center space-y-0.5 shadow-xs transition-all duration-300">
+                    <div class="flex items-center justify-center gap-1.5 font-bold text-xs text-amber-900" id="phone-status-title">
+                      <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse" id="phone-status-dot"></span>
+                      <span id="phone-status-heading">Under Review</span>
+                    </div>
+                    <p class="text-[11px] text-amber-800 leading-tight font-medium" id="phone-customer-msg">
+                      Payment is held for routine security verification. Please provide your payment reason and proofs below.
+                    </p>
+                  </div>
+
+                  <!-- Reason Section -->
+                  <div class="bg-white p-3 rounded-2xl border border-[#E4DDD4] space-y-2 shadow-xs">
+                    <label for="customer-reason-select" class="text-[10px] font-bold text-obsidian uppercase tracking-wider block">
+                      Why are you making this payment?
+                    </label>
+                    <select id="customer-reason-select" onchange="handleCustomerReasonSelect(this.value)"
+                      class="w-full bg-[#FAF8F5] border border-[#E4DDD4] rounded-xl px-2.5 py-1.5 text-xs text-obsidian font-medium focus:outline-none focus:border-obsidian">
+                      <option value="Paying my landlord's monthly maintenance share" selected>Paying landlord's maintenance share</option>
+                      <option value="Reimbursement for personal expenses">Reimbursement for personal expenses</option>
+                      <option value="Advance payment for goods or services">Advance payment for goods/services</option>
+                      <option value="Emergency transfer to family or relative">Transfer to family/relative</option>
+                      <option value="CUSTOM">Other (Type custom reason below)</option>
+                    </select>
+
+                    <input type="text" id="customer-custom-reason" placeholder="Type reason here..."
+                      class="hidden w-full bg-[#FAF8F5] border border-[#E4DDD4] rounded-xl px-2.5 py-1.5 text-xs text-obsidian focus:outline-none">
+
+                    <button onclick="submitCustomerReason()" id="btn-submit-reason"
+                      class="w-full py-1.5 rounded-xl bg-obsidian text-white text-[11px] font-bold hover:bg-black transition shadow-xs">
+                      Update Stated Reason
+                    </button>
+                  </div>
+
+                  <!-- Upload Proofs Section -->
+                  <div class="bg-white p-3 rounded-2xl border border-[#E4DDD4] space-y-2 shadow-xs">
+                    <div class="flex items-center justify-between">
+                      <span class="text-[10px] font-bold text-obsidian uppercase tracking-wider">Upload Verification Proofs</span>
+                      <span class="text-[9px] text-[#8C847A] font-mono">PDF, JPG, PNG</span>
+                    </div>
+
+                    <!-- Dropzone / Tap to Upload -->
+                    <label for="customer-file-upload"
+                      class="border-2 border-dashed border-[#D4CDC4] hover:border-obsidian rounded-xl p-2.5 flex flex-col items-center justify-center text-center cursor-pointer bg-[#FAF8F5] transition group">
+                      <svg class="w-5 h-5 text-[#8C847A] group-hover:text-obsidian mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                      </svg>
+                      <span class="text-[11px] font-semibold text-obsidian">Tap or Drag & Drop to Upload</span>
+                      <span class="text-[9px] text-[#8C847A]">Aadhaar, PAN, Rental, or Utility</span>
+                      <input id="customer-file-upload" type="file" multiple accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="handleCustomerFiles(this.files)">
+                    </label>
+
+                    <!-- Upload Progress Simulation Bar -->
+                    <div id="phone-upload-progress" class="hidden space-y-1">
+                      <div class="flex justify-between text-[10px] font-mono text-obsidian">
+                        <span id="phone-upload-filename">Uploading...</span>
+                        <span id="phone-upload-pct">100%</span>
+                      </div>
+                      <div class="w-full h-1 bg-[#ECE7E1] rounded-full overflow-hidden">
+                        <div id="phone-upload-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-300" style="width: 100%;"></div>
+                      </div>
+                    </div>
+
+                    <!-- Uploaded List inside phone -->
+                    <div id="phone-uploaded-docs-list" class="space-y-1 max-h-24 overflow-y-auto scrollbar-thin">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+
+                  <!-- Primary Action Button -->
+                  <div class="pt-1 space-y-1.5">
+                    <button id="phone-action-btn" onclick="handleCustomerPrimaryAction()"
+                      class="w-full py-2.5 rounded-full bg-amber-600 text-white font-bold text-xs shadow-sm hover:bg-amber-700 transition">
+                      Submit Proofs for Clearance
+                    </button>
+                    <button onclick="handleCustomerCancel()" class="text-[10px] text-[#8C847A] hover:text-obsidian font-medium transition block mx-auto">
+                      Cancel Payment
+                    </button>
+                  </div>
+
                 </div>
 
                 <!-- Encryption & NPCI Compliance Footer -->
@@ -5876,7 +6045,861 @@
       }
       animId = requestAnimationFrame(render);
     })();
+  
+    // =========================================================================
+    // BANK EMPLOYEE REVIEW INTERFACE & REAL-TIME CUSTOMER UPI SYNC ENGINE
+    // =========================================================================
+    const DEFAULT_INVESTIGATION_CASE = {
+      caseId: 'CASE-2026-04817',
+      txnId: 'txn_0480421',
+      account: 'acc_12631',
+      amount: '₹93.54',
+      timestamp: '13 Nov 2026, 14:48:12 IST',
+      riskScore: '87.4% (Critical)',
+      gateRule: 'HOLD (Blocked)',
+      status: 'Pending Review', // 'Pending Review' | 'Docs Received' | 'On Hold' | 'Visit Branch Requested' | 'Approved' | 'Rejected'
+      customerReason: "Paying my landlord's monthly maintenance share",
+      officerNotes: '',
+      documents: [
+        { id: 'doc-1', name: 'aadhaar_card_masked.pdf', type: 'PDF', time: '14:48 IST', size: '1.4 MB', status: 'Verified', docType: 'aadhaar' },
+        { id: 'doc-2', name: 'pan_card_front.jpg', type: 'JPG', time: '14:48 IST', size: '890 KB', status: 'Needs Check', docType: 'pan' },
+        { id: 'doc-3', name: 'hdfc_bank_statement_q3.pdf', type: 'PDF', time: '14:49 IST', size: '2.8 MB', status: 'Verified', docType: 'statement' },
+        { id: 'doc-4', name: 'rent_agreement_oct2026.pdf', type: 'PDF', time: '14:49 IST', size: '3.1 MB', status: 'Verified', docType: 'rent' },
+        { id: 'doc-5', name: 'bescom_electricity_bill.pdf', type: 'PDF', time: '14:50 IST', size: '940 KB', status: 'Needs Check', docType: 'utility' }
+      ],
+      auditTimeline: [
+        { time: '14:48:10', actor: 'SYSTEM', action: 'FLAGGED', note: 'Pre-settlement velocity threshold alert on acc_12631 (TreeSHAP 87.4%)' },
+        { time: '14:48:12', actor: 'SYSTEM', action: 'HOLD', note: 'Transaction auto-held in Pre-Settlement Gate; Case CASE-2026-04817 assigned' },
+        { time: '14:48:45', actor: 'CUSTOMER', action: 'DOCS_UPLOADED', note: 'Customer submitted Aadhaar, PAN, Bank Statement, Rent Agreement, and Utility Bill' }
+      ]
+    };
+
+    let activeCaseState = null;
+    let currentlyViewingDocId = null;
+
+    function getInvestigationCase() {
+      if (!activeCaseState) {
+        try {
+          const stored = localStorage.getItem('streamshield_case_state');
+          if (stored) {
+            activeCaseState = JSON.parse(stored);
+          }
+        } catch (e) {
+          console.warn('Could not read stored case state:', e);
+        }
+        if (!activeCaseState) {
+          activeCaseState = JSON.parse(JSON.stringify(DEFAULT_INVESTIGATION_CASE));
+        }
+      }
+      return activeCaseState;
+    }
+
+    function saveInvestigationCase() {
+      try {
+        localStorage.setItem('streamshield_case_state', JSON.stringify(activeCaseState));
+      } catch (e) {
+        console.warn('Could not save case state:', e);
+      }
+      renderOfficerCase();
+      renderCustomerPhoneView();
+    }
+
+    // Render Officer Panel
+    function renderOfficerCase() {
+      const c = getInvestigationCase();
+      
+      const idEl = document.getElementById('case-id-display');
+      if (idEl) idEl.innerText = c.caseId;
+      const tsEl = document.getElementById('case-timestamp-display');
+      if (tsEl) tsEl.innerText = c.timestamp;
+      const accEl = document.getElementById('case-account-display');
+      if (accEl) accEl.innerText = c.account;
+      const amtEl = document.getElementById('case-amount-display');
+      if (amtEl) amtEl.innerText = c.amount;
+      const riskEl = document.getElementById('case-risk-level');
+      if (riskEl) riskEl.innerText = c.riskScore;
+      const ruleEl = document.getElementById('case-gate-rule');
+      if (ruleEl) ruleEl.innerText = c.gateRule;
+
+      // Status Pill
+      const pill = document.getElementById('case-status-pill');
+      const pillText = document.getElementById('case-status-text');
+      const pillDot = document.getElementById('case-status-dot');
+      if (pill && pillText && pillDot) {
+        pillText.innerText = c.status;
+        if (c.status === 'Approved') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-bold font-sans flex items-center gap-1.5 bg-emerald-100 text-emerald-800 border border-emerald-200';
+          pillDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+        } else if (c.status === 'On Hold') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-bold font-sans flex items-center gap-1.5 bg-rose-100 text-rose-800 border border-rose-200';
+          pillDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-pulse';
+        } else if (c.status === 'Visit Branch Requested') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-bold font-sans flex items-center gap-1.5 bg-purple-100 text-purple-800 border border-purple-200';
+          pillDot.className = 'w-2 h-2 rounded-full bg-purple-500 animate-pulse';
+        } else if (c.status === 'Docs Received') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-bold font-sans flex items-center gap-1.5 bg-blue-100 text-blue-800 border border-blue-200';
+          pillDot.className = 'w-2 h-2 rounded-full bg-blue-500';
+        } else if (c.status === 'Rejected') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-bold font-sans flex items-center gap-1.5 bg-slate-900 text-white border border-slate-700';
+          pillDot.className = 'w-2 h-2 rounded-full bg-rose-500';
+        } else {
+          // Pending Review
+          pill.className = 'px-3 py-1 rounded-full text-xs font-bold font-sans flex items-center gap-1.5 bg-amber-100 text-amber-800 border border-amber-200';
+          pillDot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
+        }
+      }
+
+      // Customer Stated Reason
+      const rContent = document.getElementById('officer-reason-content');
+      if (rContent) rContent.innerText = c.customerReason;
+
+      // Render Documents List
+      renderOfficerDocs();
+
+      // Render Notes
+      const notesInput = document.getElementById('officer-notes-input');
+      if (notesInput && document.activeElement !== notesInput) {
+        notesInput.value = c.officerNotes || '';
+      }
+
+      // Render Audit Timeline
+      renderAuditTimeline();
+    }
+
+    // Render Officer Documents Table
+    function renderOfficerDocs() {
+      const c = getInvestigationCase();
+      const listEl = document.getElementById('officer-docs-list');
+      const countEl = document.getElementById('officer-doc-count');
+      if (countEl) countEl.innerText = c.documents.length;
+      if (!listEl) return;
+
+      if (c.documents.length === 0) {
+        listEl.innerHTML = '<div class="text-xs text-[#8C847A] p-4 text-center">No documents uploaded by customer yet.</div>';
+        return;
+      }
+
+      listEl.innerHTML = c.documents.map((doc, idx) => {
+        let chipClass = 'bg-slate-100 text-slate-700 border-slate-200';
+        if (doc.status === 'Verified') chipClass = 'bg-emerald-50 text-emerald-700 border-emerald-200 font-bold';
+        else if (doc.status === 'Needs Check') chipClass = 'bg-amber-50 text-amber-700 border-amber-200 font-bold';
+        else if (doc.status === 'Mismatch') chipClass = 'bg-rose-50 text-rose-700 border-rose-200 font-bold';
+
+        let iconEmoji = '📄';
+        if (doc.type === 'PDF') iconEmoji = '📑';
+        if (doc.type === 'JPG' || doc.type === 'PNG') iconEmoji = '🖼️';
+
+        return `
+          <div class="p-2.5 rounded-xl bg-porcelain border border-[#ECE7E1] hover:border-[#D4CDC4] flex items-center justify-between gap-3 transition">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-5 h-5 rounded-md bg-white border border-[#ECE7E1] text-[10px] font-mono font-bold text-[#8C847A] flex items-center justify-center shrink-0">
+                ${idx + 1}
+              </span>
+              <span class="text-sm shrink-0">${iconEmoji}</span>
+              <div class="min-w-0">
+                <span class="text-xs font-bold text-obsidian block truncate font-mono">${doc.name}</span>
+                <span class="text-[10px] text-[#8C847A] font-mono">${doc.type} · ${doc.time} · ${doc.size}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="px-2 py-0.5 rounded-md text-[10px] border ${chipClass}">${doc.status}</span>
+              <button onclick="openDocModal('${doc.id}')"
+                class="px-2.5 py-1 rounded-lg bg-white hover:bg-obsidian hover:text-white border border-[#ECE7E1] text-[11px] font-bold text-obsidian transition shadow-2xs">
+                View
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Render Audit Timeline
+    function renderAuditTimeline() {
+      const c = getInvestigationCase();
+      const tlEl = document.getElementById('case-audit-timeline');
+      const countEl = document.getElementById('audit-trail-count');
+      if (countEl) countEl.innerText = `${c.auditTimeline.length} Entries`;
+      if (!tlEl) return;
+
+      tlEl.innerHTML = c.auditTimeline.map(item => `
+        <div class="flex items-start gap-2 py-1 border-b border-[#ECE7E1]/50 last:border-none text-[11px]">
+          <span class="text-[#8C847A] shrink-0">[${item.time}]</span>
+          <span class="font-bold text-obsidian shrink-0">${item.actor}:</span>
+          <span class="text-[#6B6661]">${item.note}</span>
+        </div>
+      `).join('');
+    }
+
+    // Officer Decision Buttons Handler
+    function handleOfficerDecision(action) {
+      const c = getInvestigationCase();
+      const nowStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+      const notesEl = document.getElementById('officer-notes-input');
+      const currentNote = (notesEl && notesEl.value.trim()) ? ` - Note: "${notesEl.value.trim()}"` : '';
+
+      if (action === 'ALLOW') {
+        c.status = 'Approved';
+        c.gateRule = 'ALLOW (Cleared by Officer)';
+        c.auditTimeline.unshift({
+          time: nowStr,
+          actor: 'OFFICER (CRO)',
+          action: 'ALLOW',
+          note: `Approved payment transfer to ${c.account} (₹93.54)${currentNote}`
+        });
+      } else if (action === 'HOLD') {
+        c.status = 'On Hold';
+        c.gateRule = 'HOLD (Officer Directive)';
+        c.auditTimeline.unshift({
+          time: nowStr,
+          actor: 'OFFICER (CRO)',
+          action: 'HOLD',
+          note: `Payment placed on formal hold pending investigation${currentNote}`
+        });
+      } else if (action === 'VISIT_BRANCH') {
+        c.status = 'Visit Branch Requested';
+        c.gateRule = 'BRANCH_VERIFY (Biometric In-Person)';
+        c.auditTimeline.unshift({
+          time: nowStr,
+          actor: 'OFFICER (CRO)',
+          action: 'VISIT_BRANCH',
+          note: `Requested customer to visit nearest bank branch with physical photo ID${currentNote}`
+        });
+      } else if (action === 'REJECT') {
+        c.status = 'Rejected';
+        c.gateRule = 'REJECTED (Suspicious Mule Activity)';
+        c.auditTimeline.unshift({
+          time: nowStr,
+          actor: 'OFFICER (CRO)',
+          action: 'REJECT',
+          note: `Rejected payment & flagged account ${c.account} for consortium registry reporting${currentNote}`
+        });
+      }
+
+      if (notesEl) c.officerNotes = notesEl.value;
+      saveInvestigationCase();
+    }
+
+    // Toggle and Submit Request More Documents
+    function toggleRequestDocInput() {
+      const box = document.getElementById('request-doc-box');
+      if (!box) return;
+      box.classList.toggle('hidden');
+      if (!box.classList.contains('hidden')) {
+        const inp = document.getElementById('request-doc-input');
+        if (inp) inp.focus();
+      }
+    }
+
+    function submitRequestDoc() {
+      const inp = document.getElementById('request-doc-input');
+      if (!inp || !inp.value.trim()) return;
+      const requestedItem = inp.value.trim();
+      const c = getInvestigationCase();
+      const nowStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+
+      c.status = 'Pending Review';
+      c.auditTimeline.unshift({
+        time: nowStr,
+        actor: 'OFFICER (CRO)',
+        action: 'DOC_REQUEST',
+        note: `Requested additional document: "${requestedItem}"`
+      });
+      c.requestedDocPrompt = requestedItem;
+
+      inp.value = '';
+      toggleRequestDocInput();
+      saveInvestigationCase();
+    }
+
+    // Render Customer Phone UPI Screen
+    function renderCustomerPhoneView() {
+      const c = getInvestigationCase();
+
+      const banner = document.getElementById('phone-status-banner');
+      const heading = document.getElementById('phone-status-heading');
+      const dot = document.getElementById('phone-status-dot');
+      const msg = document.getElementById('phone-customer-msg');
+      const actionBtn = document.getElementById('phone-action-btn');
+      const select = document.getElementById('customer-reason-select');
+
+      if (select && document.activeElement !== select) {
+        let found = false;
+        for (let opt of select.options) {
+          if (opt.value === c.customerReason) {
+            select.value = c.customerReason;
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          select.value = 'CUSTOM';
+          const customInp = document.getElementById('customer-custom-reason');
+          if (customInp) {
+            customInp.classList.remove('hidden');
+            customInp.value = c.customerReason;
+          }
+        }
+      }
+
+      if (banner && heading && dot && msg && actionBtn) {
+        if (c.status === 'Approved') {
+          banner.className = 'p-2.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-0.5 shadow-xs transition-all duration-300';
+          heading.className = 'flex items-center justify-center gap-1.5 font-bold text-xs text-emerald-900';
+          heading.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> <span>Payment Approved & Released</span>';
+          msg.className = 'text-[11px] text-emerald-800 leading-tight font-medium';
+          msg.innerText = 'Your payment of ₹93.54 has been cleared and transferred to acc_12631.';
+          actionBtn.className = 'w-full py-2.5 rounded-full bg-emerald-600 text-white font-bold text-xs shadow-sm hover:bg-emerald-700 transition';
+          actionBtn.innerText = 'View UPI Receipt';
+        } else if (c.status === 'On Hold') {
+          banner.className = 'p-2.5 rounded-2xl bg-rose-50 border border-rose-200 text-center space-y-0.5 shadow-xs transition-all duration-300';
+          heading.className = 'flex items-center justify-center gap-1.5 font-bold text-xs text-rose-900';
+          heading.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> <span>Payment On Hold</span>';
+          msg.className = 'text-[11px] text-rose-800 leading-tight font-medium';
+          msg.innerText = 'Bank officer has placed this transaction on temporary hold. Please verify reasons and ensure all documents match.';
+          actionBtn.className = 'w-full py-2.5 rounded-full bg-rose-600 text-white font-bold text-xs shadow-sm hover:bg-rose-700 transition';
+          actionBtn.innerText = 'Contact Fraud Support';
+        } else if (c.status === 'Visit Branch Requested') {
+          banner.className = 'p-2.5 rounded-2xl bg-purple-50 border border-purple-200 text-center space-y-0.5 shadow-xs transition-all duration-300';
+          heading.className = 'flex items-center justify-center gap-1.5 font-bold text-xs text-purple-900';
+          heading.innerHTML = '<span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span> <span>Please Visit Nearest Branch</span>';
+          msg.className = 'text-[11px] text-purple-800 leading-tight font-medium';
+          msg.innerText = 'Bank policy requires in-person ID verification for this beneficiary. Please visit your nearest branch with physical Photo ID.';
+          actionBtn.className = 'w-full py-2.5 rounded-full bg-purple-600 text-white font-bold text-xs shadow-sm hover:bg-purple-700 transition';
+          actionBtn.innerText = 'Locate Nearest Branch';
+        } else if (c.requestedDocPrompt) {
+          banner.className = 'p-2.5 rounded-2xl bg-blue-50 border border-blue-200 text-center space-y-0.5 shadow-xs transition-all duration-300';
+          heading.className = 'flex items-center justify-center gap-1.5 font-bold text-xs text-blue-900';
+          heading.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span> <span>More Documents Required</span>';
+          msg.className = 'text-[11px] text-blue-800 leading-tight font-medium';
+          msg.innerText = `Bank officer requested: "${c.requestedDocPrompt}". Please upload it below.`;
+          actionBtn.className = 'w-full py-2.5 rounded-full bg-blue-600 text-white font-bold text-xs shadow-sm hover:bg-blue-700 transition';
+          actionBtn.innerText = 'Upload Requested Document';
+        } else if (c.status === 'Docs Received') {
+          banner.className = 'p-2.5 rounded-2xl bg-blue-50 border border-blue-200 text-center space-y-0.5 shadow-xs transition-all duration-300';
+          heading.className = 'flex items-center justify-center gap-1.5 font-bold text-xs text-blue-900';
+          heading.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-500"></span> <span>Documents Received</span>';
+          msg.className = 'text-[11px] text-blue-800 leading-tight font-medium';
+          msg.innerText = 'Proofs received by fraud operations desk. A bank officer is reviewing your submission.';
+          actionBtn.className = 'w-full py-2.5 rounded-full bg-blue-600 text-white font-bold text-xs shadow-sm hover:bg-blue-700 transition';
+          actionBtn.innerText = 'Under Review';
+        } else {
+          // Default Under Review
+          banner.className = 'p-2.5 rounded-2xl bg-amber-50 border border-amber-200 text-center space-y-0.5 shadow-xs transition-all duration-300';
+          heading.className = 'flex items-center justify-center gap-1.5 font-bold text-xs text-amber-900';
+          heading.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> <span>Under Review</span>';
+          msg.className = 'text-[11px] text-amber-800 leading-tight font-medium';
+          msg.innerText = 'Payment is held for routine security verification. Please provide your payment reason and proofs below.';
+          actionBtn.className = 'w-full py-2.5 rounded-full bg-amber-600 text-white font-bold text-xs shadow-sm hover:bg-amber-700 transition';
+          actionBtn.innerText = 'Submit Proofs for Clearance';
+        }
+      }
+
+      // Render Phone uploaded docs list
+      const phoneList = document.getElementById('phone-uploaded-docs-list');
+      if (phoneList) {
+        phoneList.innerHTML = c.documents.map((d, i) => `
+          <div class="flex items-center justify-between p-1.5 rounded-lg bg-[#FAF8F5] border border-[#E4DDD4] text-[10px]">
+            <span class="truncate font-mono font-medium text-obsidian flex items-center gap-1">
+              <span>📎</span>
+              <span>${d.name}</span>
+            </span>
+            <button onclick="removeCustomerDoc('${d.id}')" class="text-rose-600 hover:text-rose-800 font-bold px-1" title="Remove">✕</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Customer reason dropdown change
+    function handleCustomerReasonSelect(val) {
+      const customInp = document.getElementById('customer-custom-reason');
+      if (val === 'CUSTOM') {
+        if (customInp) customInp.classList.remove('hidden');
+      } else {
+        if (customInp) customInp.classList.add('hidden');
+      }
+    }
+
+    function submitCustomerReason() {
+      const select = document.getElementById('customer-reason-select');
+      const customInp = document.getElementById('customer-custom-reason');
+      let reason = select ? select.value : '';
+      if (reason === 'CUSTOM' && customInp && customInp.value.trim()) {
+        reason = customInp.value.trim();
+      }
+
+      const c = getInvestigationCase();
+      c.customerReason = reason;
+      const nowStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+      c.auditTimeline.unshift({
+        time: nowStr,
+        actor: 'CUSTOMER',
+        action: 'REASON_UPDATE',
+        note: `Updated explanation to: "${reason}"`
+      });
+
+      const btn = document.getElementById('btn-submit-reason');
+      if (btn) {
+        const oldText = btn.innerText;
+        btn.innerText = '✓ Reason Updated!';
+        setTimeout(() => { btn.innerText = oldText; }, 1500);
+      }
+
+      saveInvestigationCase();
+    }
+
+    // Handle File Upload from phone chassis
+    function handleCustomerFiles(files) {
+      if (!files || files.length === 0) return;
+      const progBox = document.getElementById('phone-upload-progress');
+      const fnameEl = document.getElementById('phone-upload-filename');
+      const pctEl = document.getElementById('phone-upload-pct');
+      const barEl = document.getElementById('phone-upload-bar');
+
+      if (progBox) progBox.classList.remove('hidden');
+      if (fnameEl) fnameEl.innerText = files[0].name;
+
+      let progress = 15;
+      const interval = setInterval(() => {
+        progress += 30;
+        if (barEl) barEl.style.width = `${progress}%`;
+        if (pctEl) pctEl.innerText = `${Math.min(100, progress)}%`;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            if (progBox) progBox.classList.add('hidden');
+            
+            const c = getInvestigationCase();
+            const nowStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+
+            Array.from(files).forEach((file, i) => {
+              const ext = file.name.split('.').pop().toUpperCase();
+              let docType = 'utility';
+              const lName = file.name.toLowerCase();
+              if (lName.includes('aadhaar')) docType = 'aadhaar';
+              else if (lName.includes('pan')) docType = 'pan';
+              else if (lName.includes('statement') || lName.includes('bank')) docType = 'statement';
+              else if (lName.includes('rent') || lName.includes('lease') || lName.includes('agreement')) docType = 'rent';
+
+              const newDoc = {
+                id: `doc-${Date.now()}-${i}`,
+                name: file.name,
+                type: ext,
+                time: nowStr,
+                size: (file.size / (1024 * 1024)).toFixed(1) + ' MB',
+                status: 'Needs Check',
+                docType: docType
+              };
+              c.documents.push(newDoc);
+              c.auditTimeline.unshift({
+                time: nowStr,
+                actor: 'CUSTOMER',
+                action: 'FILE_UPLOAD',
+                note: `Uploaded file: ${file.name} (${newDoc.size})`
+              });
+            });
+
+            c.status = 'Docs Received';
+            c.requestedDocPrompt = null;
+            saveInvestigationCase();
+          }, 200);
+        }
+      }, 80);
+    }
+
+    function removeCustomerDoc(docId) {
+      const c = getInvestigationCase();
+      const removed = c.documents.find(d => d.id === docId);
+      c.documents = c.documents.filter(d => d.id !== docId);
+      if (removed) {
+        const nowStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+        c.auditTimeline.unshift({
+          time: nowStr,
+          actor: 'CUSTOMER',
+          action: 'REMOVE_DOC',
+          note: `Removed document: ${removed.name}`
+        });
+      }
+      saveInvestigationCase();
+    }
+
+    function handleCustomerPrimaryAction() {
+      const c = getInvestigationCase();
+      if (c.status === 'Approved') {
+        alert("Showing Official UPI Payment Receipt for ₹93.54 to acc_12631. Transaction Reference: UPI-0480421-NPCI.");
+      } else if (c.status === 'Visit Branch Requested') {
+        alert("Locating Nearest Bank Branch... Showing: HDFC Bank, Koramangala 5th Block Branch (0.8 km away). Branch Code: 01245.");
+      } else {
+        const nowStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+        c.status = 'Docs Received';
+        c.auditTimeline.unshift({
+          time: nowStr,
+          actor: 'CUSTOMER',
+          action: 'SUBMIT_FOR_REVIEW',
+          note: 'Customer requested expedited officer clearance of submitted proofs'
+        });
+        saveInvestigationCase();
+      }
+    }
+
+    function handleCustomerCancel() {
+      if (confirm("Are you sure you want to cancel this transfer of ₹93.54?")) {
+        const c = getInvestigationCase();
+        const nowStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+        c.status = 'Rejected';
+        c.gateRule = 'CANCELLED_BY_CUSTOMER';
+        c.auditTimeline.unshift({
+          time: nowStr,
+          actor: 'CUSTOMER',
+          action: 'CANCEL',
+          note: 'Customer cancelled the pending payment'
+        });
+        saveInvestigationCase();
+      }
+    }
+
+    // =========================================================================
+    // SYNTHETIC DOCUMENTS PREVIEW MODAL RENDERING
+    // =========================================================================
+    function openDocModal(docId) {
+      const c = getInvestigationCase();
+      const doc = c.documents.find(d => d.id === docId);
+      if (!doc) return;
+
+      currentlyViewingDocId = docId;
+      const modal = document.getElementById('doc-preview-modal');
+      const title = document.getElementById('modal-doc-title');
+      const chip = document.getElementById('modal-doc-chip');
+      const meta = document.getElementById('modal-doc-meta');
+      const icon = document.getElementById('modal-doc-icon');
+      const renderArea = document.getElementById('modal-doc-render-area');
+
+      if (title) title.innerText = doc.name;
+      if (meta) meta.innerText = `${doc.time} · ${doc.size} · Synthetic Demo Data`;
+      if (icon) icon.innerText = (doc.type === 'PDF') ? '📑' : '🖼️';
+
+      if (chip) {
+        chip.innerText = doc.status;
+        if (doc.status === 'Verified') chip.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800';
+        else if (doc.status === 'Needs Check') chip.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800';
+        else chip.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800';
+      }
+
+      if (renderArea) {
+        renderArea.innerHTML = getSyntheticDocHTML(doc.docType || 'aadhaar', doc.name);
+      }
+
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeDocModal() {
+      const modal = document.getElementById('doc-preview-modal');
+      if (modal) modal.classList.add('hidden');
+      currentlyViewingDocId = null;
+    }
+
+    function updateCurrentDocStatus(newStatus) {
+      if (!currentlyViewingDocId) return;
+      const c = getInvestigationCase();
+      const doc = c.documents.find(d => d.id === currentlyViewingDocId);
+      if (doc) {
+        doc.status = newStatus;
+        const nowStr = new Date().toLocaleTimeString('en-IN', { hour12: false });
+        c.auditTimeline.unshift({
+          time: nowStr,
+          actor: 'OFFICER (CRO)',
+          action: 'DOC_STATUS',
+          note: `Marked "${doc.name}" as [${newStatus}]`
+        });
+        saveInvestigationCase();
+        openDocModal(currentlyViewingDocId); // refresh modal header chip
+      }
+    }
+
+    // Synthetic Document Generator with "SAMPLE" Watermark
+    function getSyntheticDocHTML(type, filename) {
+      const watermark = `
+        <div class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-20">
+          <span class="text-rose-900/15 font-black text-6xl sm:text-7xl -rotate-25 tracking-widest select-none uppercase font-sans border-4 border-dashed border-rose-900/20 px-8 py-3 rounded-2xl">
+            SAMPLE · DEMO ONLY
+          </span>
+        </div>
+      `;
+
+      if (type === 'aadhaar') {
+        return `
+          <div class="w-full max-w-md bg-white rounded-2xl border-2 border-slate-300 shadow-md p-5 relative overflow-hidden font-sans text-obsidian">
+            ${watermark}
+            <!-- Tricolor Header Bar -->
+            <div class="h-2 w-full bg-gradient-to-r from-orange-500 via-white to-emerald-600 rounded-t mb-3"></div>
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-orange-100 border border-orange-300 flex items-center justify-center font-bold text-xs text-orange-700">🏛️</div>
+                <div>
+                  <div class="text-[10px] font-bold text-slate-800 leading-tight">Government of India</div>
+                  <div class="text-[9px] text-slate-500 font-medium">Unique Identification Authority of India</div>
+                </div>
+              </div>
+              <span class="text-[9px] font-mono font-bold bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200">DEMO AADHAAR</span>
+            </div>
+
+            <div class="flex gap-4 items-center my-3">
+              <!-- Photo Box -->
+              <div class="w-20 h-24 bg-slate-100 border border-slate-300 rounded-lg flex flex-col items-center justify-center text-slate-400 text-xs shrink-0">
+                <span class="text-2xl mb-1">👤</span>
+                <span class="text-[8px] font-mono">PHOTO</span>
+              </div>
+              <!-- Identity Details -->
+              <div class="space-y-1 text-xs">
+                <div><span class="text-[10px] text-slate-400 block">Name:</span> <strong class="text-obsidian text-sm">Rohan S. Sharma</strong></div>
+                <div><span class="text-[10px] text-slate-400 block">DOB / Year of Birth:</span> <strong class="text-slate-800 font-mono">14/08/1992</strong></div>
+                <div><span class="text-[10px] text-slate-400 block">Gender:</span> <strong class="text-slate-800">Male</strong></div>
+              </div>
+            </div>
+
+            <!-- Masked UID Number -->
+            <div class="mt-4 pt-3 border-t border-slate-200 text-center">
+              <span class="text-xs text-slate-500 block mb-0.5">Aadhaar Number (Masked)</span>
+              <span class="text-lg font-black font-mono tracking-widest text-obsidian bg-slate-50 px-3 py-1 rounded-md border border-slate-200">
+                XXXX XXXX 4821
+              </span>
+            </div>
+          </div>
+        `;
+      } else if (type === 'pan') {
+        return `
+          <div class="w-full max-w-md bg-gradient-to-br from-[#E0F2FE] via-[#F0F9FF] to-[#E0E7FF] rounded-2xl border-2 border-sky-300 shadow-md p-5 relative overflow-hidden font-sans text-obsidian">
+            ${watermark}
+            <div class="flex items-center justify-between border-b border-sky-200 pb-2 mb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-sky-200 text-sky-800 flex items-center justify-center text-xs font-bold">🇮🇳</div>
+                <div>
+                  <div class="text-[11px] font-black text-sky-950 uppercase tracking-tight">Income Tax Department</div>
+                  <div class="text-[9px] text-sky-700">Govt. of India · Permanent Account Number</div>
+                </div>
+              </div>
+              <span class="text-[9px] font-mono font-bold bg-white text-sky-800 px-1.5 py-0.5 rounded border border-sky-200">DEMO PAN</span>
+            </div>
+
+            <div class="flex gap-4 items-center my-3">
+              <div class="w-20 h-24 bg-white border border-sky-200 rounded-lg flex flex-col items-center justify-center text-sky-400 text-xs shrink-0">
+                <span class="text-2xl mb-1">👤</span>
+                <span class="text-[8px] font-mono">PHOTO</span>
+              </div>
+              <div class="space-y-1 text-xs">
+                <div><span class="text-[10px] text-sky-600 block uppercase">Cardholder Name:</span> <strong class="text-obsidian text-sm font-mono uppercase">ROHAN S SHARMA</strong></div>
+                <div><span class="text-[10px] text-sky-600 block uppercase">Father's Name:</span> <strong class="text-slate-800 font-mono uppercase">SUDHIR K SHARMA</strong></div>
+                <div><span class="text-[10px] text-sky-600 block uppercase">Date of Birth:</span> <strong class="text-slate-800 font-mono">14/08/1992</strong></div>
+              </div>
+            </div>
+
+            <div class="mt-3 pt-2.5 border-t border-sky-200 flex justify-between items-end">
+              <div>
+                <span class="text-[10px] text-sky-700 block uppercase">Permanent Account Number:</span>
+                <span class="text-base font-black font-mono tracking-widest text-sky-950">ABCPS****K</span>
+              </div>
+              <div class="font-serif italic text-xs text-sky-800 font-bold border-b border-sky-400 pb-0.5">
+                Rohan Sharma
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'statement') {
+        return `
+          <div class="w-full max-w-lg bg-white rounded-2xl border border-slate-300 shadow-md p-5 relative overflow-hidden font-sans text-obsidian text-xs">
+            ${watermark}
+            <div class="flex items-center justify-between border-b-2 border-red-700 pb-2 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded bg-red-700 text-white font-black text-xs flex items-center justify-center">H</span>
+                <div>
+                  <strong class="text-sm font-black text-obsidian">HDFC BANK LIMITED</strong>
+                  <span class="text-[10px] text-slate-500 block">Koramangala 5th Block Branch · IFSC: HDFC0001245</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold text-slate-600 uppercase block">Account Statement</span>
+                <span class="text-[9px] font-mono text-slate-500">Period: Q3 (Last 3 Months)</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 mb-3 grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] font-mono">
+              <div><span class="text-slate-400 block text-[9px]">Account Holder:</span> <strong>Rohan S. Sharma</strong></div>
+              <div><span class="text-slate-400 block text-[9px]">A/C Number:</span> <strong>50100482915892</strong></div>
+              <div><span class="text-slate-400 block text-[9px]">Available Balance:</span> <strong class="text-emerald-700">₹84,240.50</strong></div>
+            </div>
+
+            <div class="space-y-1.5 font-mono text-[10px]">
+              <div class="grid grid-cols-12 font-bold text-slate-400 border-b pb-1">
+                <span class="col-span-3">Date</span>
+                <span class="col-span-5">Narration</span>
+                <span class="col-span-2 text-right">Debit</span>
+                <span class="col-span-2 text-right">Credit</span>
+              </div>
+              <div class="grid grid-cols-12 py-1 border-b border-slate-100">
+                <span class="col-span-3 text-slate-500">15-Oct-2026</span>
+                <span class="col-span-5 truncate">SALARY/INFOSYS/OCT</span>
+                <span class="col-span-2 text-right text-slate-400">-</span>
+                <span class="col-span-2 text-right text-emerald-700 font-bold">+75,000.00</span>
+              </div>
+              <div class="grid grid-cols-12 py-1 border-b border-slate-100">
+                <span class="col-span-3 text-slate-500">20-Oct-2026</span>
+                <span class="col-span-5 truncate">RENT/VK_RAO/FLAT402</span>
+                <span class="col-span-2 text-right text-rose-700 font-bold">15,000.00</span>
+                <span class="col-span-2 text-right text-slate-400">-</span>
+              </div>
+              <div class="grid grid-cols-12 py-1 border-b border-slate-100">
+                <span class="col-span-3 text-slate-500">02-Nov-2026</span>
+                <span class="col-span-5 truncate">BILL/BESCOM/ELEC</span>
+                <span class="col-span-2 text-right text-rose-700 font-bold">1,840.00</span>
+                <span class="col-span-2 text-right text-slate-400">-</span>
+              </div>
+              <div class="grid grid-cols-12 py-1 bg-amber-50/80 rounded px-1 border border-amber-200">
+                <span class="col-span-3 text-amber-900 font-bold">13-Nov-2026</span>
+                <span class="col-span-5 truncate text-amber-900 font-bold">UPI/acc_12631/MAINT</span>
+                <span class="col-span-2 text-right text-rose-700 font-bold">93.54</span>
+                <span class="col-span-2 text-right text-slate-400">-</span>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'rent') {
+        return `
+          <div class="w-full max-w-lg bg-[#FFFEFA] rounded-2xl border border-amber-300 shadow-md p-5 relative overflow-hidden font-serif text-obsidian text-xs">
+            ${watermark}
+            <div class="text-center border-b-2 border-amber-700/60 pb-3 mb-3">
+              <span class="text-[10px] font-mono tracking-widest text-amber-800 uppercase block font-bold">GOVERNMENT OF KARNATAKA · E-STAMP CERTIFICATE</span>
+              <span class="text-[9px] font-mono text-slate-500">Cert No: IN-KA98421034091M · Stamp Duty: ₹200 Paid</span>
+              <h4 class="text-sm font-bold uppercase tracking-wider text-amber-950 mt-1">Residential Lease & Maintenance Agreement</h4>
+            </div>
+
+            <div class="space-y-2 text-[11px] leading-relaxed text-slate-800">
+              <p>This Agreement is executed between <strong>Mr. V. K. Rao</strong> (Landlord / Beneficiary <code class="font-mono text-xs">acc_12631</code>) and <strong>Mr. Rohan S. Sharma</strong> (Tenant).</p>
+              <div class="bg-amber-50/60 p-2.5 rounded-lg border border-amber-200 font-sans text-xs space-y-1">
+                <div><strong>Premises:</strong> Flat No. 402, Green Acres Residency, 17th Main, Bangalore 560034.</div>
+                <div><strong>Monthly Rent:</strong> ₹15,000.00 via Bank Transfer.</div>
+                <div><strong>Apportioned Monthly Maintenance:</strong> ₹93.54 (Water & Generator Share).</div>
+              </div>
+              <p class="text-[10px] text-slate-600 italic">"The tenant agrees to remit the exact monthly society generator & maintenance share of ₹93.54 to the owner's dedicated UPI account on or before the 15th of each month."</p>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-amber-200 flex justify-between items-end font-sans">
+              <div>
+                <span class="text-[9px] text-slate-500 block">First Party (Owner):</span>
+                <span class="font-serif italic font-bold text-xs">V. K. Rao</span>
+              </div>
+              <div class="text-right">
+                <span class="text-[9px] text-slate-500 block">Second Party (Tenant):</span>
+                <span class="font-serif italic font-bold text-xs">Rohan S. Sharma</span>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        // Utility Bill
+        return `
+          <div class="w-full max-w-lg bg-white rounded-2xl border border-slate-300 shadow-md p-5 relative overflow-hidden font-sans text-obsidian text-xs">
+            ${watermark}
+            <div class="flex items-center justify-between border-b-2 border-emerald-700 pb-2 mb-3">
+              <div>
+                <strong class="text-sm font-black text-emerald-950">BESCOM ELECTRICITY BILL</strong>
+                <span class="text-[10px] text-slate-500 block">Bangalore Electricity Supply Company Ltd</span>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold text-slate-600 uppercase block">Billing Month</span>
+                <span class="text-xs font-mono font-bold text-obsidian">OCTOBER 2026</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-3 text-[11px]">
+              <div class="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                <span class="text-[9px] text-slate-400 block font-mono">CONSUMER ID:</span>
+                <strong class="font-mono">98421034</strong>
+                <span class="text-[9px] text-slate-400 block font-mono mt-1">METER NO:</span>
+                <strong class="font-mono">KA-BES-5892</strong>
+              </div>
+              <div class="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                <span class="text-[9px] text-slate-400 block font-mono">SERVICE ADDRESS:</span>
+                <span class="text-[11px] leading-tight block">Flat 402, Green Acres Residency, Bangalore 560034</span>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex justify-between items-center">
+              <div>
+                <span class="text-[10px] text-emerald-800 uppercase font-bold block">Total Amount Payable</span>
+                <span class="text-lg font-black font-mono text-emerald-950">₹1,840.00</span>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] text-emerald-800 uppercase font-bold block">Status</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white font-mono">PAID ONLINE</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Auto initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderOfficerCase();
+      renderCustomerPhoneView();
+    });
+    // In case DOM is already loaded
+    setTimeout(() => {
+      renderOfficerCase();
+      renderCustomerPhoneView();
+    }, 200);
+
   </script>
+  <!-- ======================================================== -->
+  <!-- SYNTHETIC DOCUMENT PREVIEW MODAL                         -->
+  <!-- ======================================================== -->
+  <div id="doc-preview-modal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-[28px] max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-[#ECE7E1] flex flex-col">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-[#ECE7E1] flex items-center justify-between bg-porcelain">
+        <div class="flex items-center gap-3">
+          <div id="modal-doc-icon" class="w-9 h-9 rounded-xl bg-white border border-[#ECE7E1] flex items-center justify-center text-base shadow-xs">
+            📄
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="modal-doc-title" class="font-bold text-obsidian text-sm">aadhaar_card_masked.pdf</h3>
+              <span id="modal-doc-chip" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Verified</span>
+            </div>
+            <p class="text-[11px] text-[#8C847A] font-mono mt-0.5" id="modal-doc-meta">13 Nov 2026, 14:48 IST · 1.4 MB · Synthetic Demo Data</p>
+          </div>
+        </div>
+        <button onclick="closeDocModal()" class="w-8 h-8 rounded-full bg-white hover:bg-[#F2ECE4] border border-[#ECE7E1] flex items-center justify-center text-obsidian font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body (The Document Render with "SAMPLE" Watermark) -->
+      <div class="p-6 overflow-y-auto flex-1 flex flex-col items-center justify-center bg-[#F9F7F4] relative select-none" id="modal-doc-render-area">
+        <!-- Rendered based on docType: aadhaar, pan, statement, rent, utility -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-[#ECE7E1] bg-white flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <button onclick="updateCurrentDocStatus('Verified')" class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold text-xs border border-emerald-200 transition">
+            ✓ Mark Verified
+          </button>
+          <button onclick="updateCurrentDocStatus('Needs Check')" class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-700 hover:bg-amber-100 font-bold text-xs border border-amber-200 transition">
+            ? Needs Check
+          </button>
+          <button onclick="updateCurrentDocStatus('Mismatch')" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold text-xs border border-rose-200 transition">
+            ✕ Mismatch
+          </button>
+        </div>
+        <button onclick="closeDocModal()" class="px-4 py-1.5 rounded-xl bg-obsidian text-white font-bold text-xs hover:bg-black transition">
+          Close Preview
+        </button>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>
